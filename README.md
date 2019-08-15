@@ -1,2 +1,2 @@
 # ThisISFatePrivate
-Game code
+This is fate game code
