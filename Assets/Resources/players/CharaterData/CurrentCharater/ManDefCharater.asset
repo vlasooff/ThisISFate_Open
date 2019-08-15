@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00689d7687bf165429dccbb8b88ed214, type: 3}
+  m_Name: ManDefCharater
+  m_EditorClassIdentifier: 
+  data:
+    Color_beard: {r: 0, g: 0, b: 0, a: 0}
+    Color_Hair: {r: 0, g: 0, b: 0, a: 0}
+    Color_eyes: {r: 0, g: 0, b: 0, a: 0}
+    Color_body: {r: 0, g: 0, b: 0, a: 0}
+    Color_lips: {r: 0, g: 0, b: 0, a: 0}
+    massa_m: 0
+    massa: 0
+    id_hair: 0
+    id_beard: 0
+    id_head: 0
+    id_body: 0
+    id_pants: 0
+    time: 0
+    boroda: 0

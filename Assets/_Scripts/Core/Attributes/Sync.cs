@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Network.Core.Attributes
+{
+    [AttributeUsage(AttributeTargets.Method)]
+    public class SyncAttribute : Attribute 
+    {
+        public ushort id;
+        public SyncAttribute(ushort idEvent)
+        {
+            id = idEvent;
+        }
+    }
+}
