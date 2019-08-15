@@ -10,6 +10,7 @@ namespace Network
     [CreateAssetMenu(fileName = "ShirtName", menuName = "Items/ShirtAsset")]
     public class ItemShirtAsset : ItemAsset
     {
-        public byte massa;
+        public Mesh CharacterMesh;
+        
     }
 }

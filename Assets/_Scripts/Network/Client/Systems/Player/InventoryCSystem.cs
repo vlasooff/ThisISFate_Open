@@ -20,10 +20,7 @@ namespace Community.Client.Systems
 
         Entity enitity;
         protected override void OnStartClient()
-        {
-            base.OnStartClient();
-
-
+        { 
             ClientData._packetProcessor.RegisterNestedType<InventoryPlayer>();
             ClientData._packetProcessor.RegisterNestedType<ItemWorld>(); 
             ClientData._packetProcessor.SubscribeReusable<WorldItemsPacket>(OnWorldItems);

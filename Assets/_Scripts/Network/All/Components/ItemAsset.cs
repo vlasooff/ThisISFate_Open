@@ -12,8 +12,9 @@ namespace   Network
         public ushort id;
         public Mesh mesh;
         public Material material; 
-      
-        
+        public byte massa =1;
+
+
     }
     
 }
