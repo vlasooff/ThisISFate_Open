@@ -11,28 +11,29 @@ using UnityEngine;
 
 namespace Community.Client.Systems
 {
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class InventoryCSystem : ComponentClient
     {
         InventoryCManager InventoryCManager;
         CustomManager customManager;
         ClientData clientData;
         public static InventoryCSystem instance;
+        private CharacterCustomBody customBody;
+        private CharacterCustomHead customHead;
+    
 
         Entity enitity;
         protected override void OnStartClient()
         { 
-            ClientData._packetProcessor.RegisterNestedType<InventoryPlayer>();
+            ClientData._packetProcessor.RegisterNestedType<ItemInventory>();
             ClientData._packetProcessor.RegisterNestedType<ItemWorld>(); 
-            ClientData._packetProcessor.SubscribeReusable<WorldItemsPacket>(OnWorldItems);
-            ClientData._packetProcessor.SubscribeReusable<InventoryItemsPacket>(OnItemsPacket);
+            ClientData._packetProcessor.SubscribeReusable<WorldItemsPacket>(OnWorldItems); 
             ClientData._packetProcessor.SubscribeReusable<CharacterDefaultPacket>(OnDefaultCharacter);
             enitity = ClientManager.manager.playersManager._clientPlayer.entity;
             InventoryCManager = ClientManager.manager.inventoryManager;
             customManager = ClientManager.manager.CustomManager;
             instance = this;
-        }
-
-     
+        } 
 
         public void GetAddItem(ushort idItem, int index)
         {
@@ -47,13 +48,7 @@ namespace Community.Client.Systems
         {
             customManager.characterDefault = obj;
         }
-
-        private void OnItemsPacket(InventoryItemsPacket obj)
-        {
-            if (EntityManager.HasComponent<InventoryPlayer>(enitity))
-                EntityManager.AddComponentData(enitity, obj.inventory);
-            else EntityManager.SetComponentData(enitity, obj.inventory);
-        }
+         
 
         private void OnWorldItems(WorldItemsPacket obj)
         {
@@ -89,16 +84,20 @@ namespace Community.Client.Systems
         }
         private void AddSlotItem(UIPacketItems packetItems, ItemInventory item)
         {
-            SlotItemUI itemUI = InstanceItem();
+            SlotItemUI itemUI = InstanceItem(packetItems);
             itemUI.id = item.id;
             itemUI.count = item.count;
             itemUI.countText.text = item.count.ToString();
             packetItems.slots.Add(itemUI);
         }
-        private SlotItemUI InstanceItem()
+        private void AddSlotCharacter(UIPacketItems packetItems, ItemInventory item)
+        {
+            
+        }
+        private SlotItemUI InstanceItem(UIPacketItems packetItems)
         {
 
-            SlotItemUI  itemUI = GameObject.Instantiate(InventoryCManager.PrefabIconItem, InventoryCManager.ParrentItemsInventory).GetComponent<UIPacketItems>();
+            SlotItemUI  itemUI = GameObject.Instantiate(InventoryCManager.PrefabIconItem,packetItems.transform).GetComponent<UIPacketItems>();
 
             return itemUI;
 
@@ -115,6 +114,10 @@ namespace Community.Client.Systems
         private void DestroyItem(int index)
         {
             GameObject.Destroy(InventoryCManager.itemWorlds[index]);
+        }
+        private void UpdateDate()
+        { 
+            EntityManager.GetComponentData<CharacterCustomBody>(enitity);
         }
     }
 

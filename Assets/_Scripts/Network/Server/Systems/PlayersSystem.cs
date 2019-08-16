@@ -35,10 +35,14 @@ namespace Community.Server
             ServerData._packetProcessor.SubscribeReusable<CreateCharacterPacket, NetPeer>(OnCreateCharacter);
             SyncStateServer.onUpdateMsec += UpdatePlayers;
             ServerCallBlack.onDisconnectedPlayer += RemovePlayer;
+            SyncStateServer.OnCreatedPlayerResponse += OnResponseCreatePlayer;
             playersData.worldConfig = new WorldData();
         }
 
-    
+        private void OnResponseCreatePlayer(PlayerManager manager, NetDataWriter packet)
+        { 
+            packet = WritePacket(SendServerInfo(manager)); //Отправка новому игроку данных сервера, игроков, и его данные 
+        }
 
         protected override void OnStartServer(NetManager manager)
         {
@@ -117,13 +121,10 @@ namespace Community.Server
                     playerServer.Spawn(new Vector3(1685, 25, 911));
                     LogDev($"[S] Add new player " + playerServer.id);
                     ServerCallBlack.onCreatePlayer?.Invoke(playerServer,true);
+                   
                 }
            
-                NetDataWriter writer = new NetDataWriter();
-                writer = WritePacket(SendServerInfo(playerServer));
-
-                playersData.onSendServerData?.Invoke(playerServer,writer);
-                peer.Send(writer, DeliveryMethod.ReliableOrdered); //Отправка новому игроку данных сервера, игроков, и его данные
+               
                  ServerData._netManager.SendToAll(WritePacket(playerServer.GetJoinedPacket()), DeliveryMethod.ReliableOrdered, peer);//Отправка базовых данных
                  
             }

@@ -169,56 +169,31 @@ namespace Community.Core
         public ItemWorld[] items { get; set; }
 
     }
-  
-    public class InventoryItemsPacket
+    public class ItemsPackets
     {
-        public InventoryPlayer inventory { get; set; }
+        public ItemPacket[] inventory { get; set; }
 
-    }
-
-    [System.Serializable]
-    public struct InventoryPlayer : IComponentData, INetSerializable
-    {
-        public byte massa;
-
-        public DynamicBuffer<ItemPacket> packets;
-
-        public InventoryPlayer(byte massaStart)
+        public ItemsPackets(ItemPacket[] array)
         {
-            massa = massaStart;
-            packets = new DynamicBuffer<ItemPacket>();
-        }
-        public void Serialize(NetDataWriter writer)
-        {
-            writer.Put(massa);
-            writer.Put(packets.Length);
-            packets = new DynamicBuffer<ItemPacket>();
-            for (int i = 0; i < packets.Length; i++)
-            {
-                packets[i].Serialize(writer);
-            }
-
-        }
-        public void Deserialize(NetDataReader reader)
-        {
-            massa = reader.GetByte();
-            for (int i = 0; i < reader.GetInt(); i++)
-            {
-                packets.Add(new ItemPacket());
-                packets[i].Deserialize(reader);
-            }
+            inventory = array;
         }
     }
 
+    public class PlayerInventory
+    {
+        public ItemInventory[] slotsCharacter { get; set; }
+        public ItemPacket[] itemPackets { get; set; }
+        public ItemInventory[] slotsHand { get; set; }
+    }
     [System.Serializable]
-    public struct ItemPacket : IBufferElementData, INetSerializable
+    public struct ItemPacket :  INetSerializable
     {
         public ushort id;
-        public NativeSlice<ItemInventory> items;
+        public ItemInventory[] items;
         public ItemPacket(ushort idItem)
         {
             id = idItem;
-            items = new NativeSlice<ItemInventory>();
+            items = new ItemInventory[0];
         }
 
         public void Serialize(NetDataWriter writer)
@@ -235,7 +210,7 @@ namespace Community.Core
         {
             id = reader.GetUShort();
             int count = reader.GetInt();
-            items = new NativeSlice<ItemInventory>(new NativeSlice<ItemInventory>(), 0, count);
+            items = new ItemInventory[count];
             for (int i = 0; i < count; i++)
             {
                 items[i].Deserialize(reader);
@@ -244,7 +219,7 @@ namespace Community.Core
         }
     }
     [System.Serializable]
-    public struct ItemInventory : IBufferElementData, INetSerializable
+    public struct ItemInventory :  INetSerializable
     {
         public ushort id;
         public ushort count;

@@ -20,8 +20,7 @@ namespace Community.Server
         public ChatComponent chatData;
         //Система Игроков
         public PlayersInfoComponent playersData;
-        public RegionsComponent regionsComponent;
-        public InventoryManager inventoryManager;
+        public RegionsComponent regionsComponent; 
         public static ServerManager manager;
 
         private void Awake()

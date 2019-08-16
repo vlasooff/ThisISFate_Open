@@ -14,9 +14,7 @@ namespace Community.Client.Components
         public ItemComponent[] itemWorlds = new ItemComponent[0];
         public List<UIPacketItems> PacketItems = new List<UIPacketItems>();
 
-        public SlotItemUI[] slotsCharacter;
-        public Action[] slotsAction;
-
+        public SlotItemUI[] slotsCharacter; 
         public SlotItemUI[] Arms;
 
         public GameObject PrefabIconPacket; 

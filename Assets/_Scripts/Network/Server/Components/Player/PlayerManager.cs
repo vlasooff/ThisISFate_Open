@@ -26,6 +26,7 @@ namespace Community.Server.Components
         public bool isNew = false;
         public DateTime createUser;
         PlayerServerData playerdata;
+        public PlayerInventory playerInventory;
 
         public PlayerManager(JoinPacket packet, ushort _id, NetPeer _peer)
         {
@@ -124,8 +125,7 @@ namespace Community.Server.Components
             GameObject pl = GameObject.Instantiate(Resources.Load("playerServer"), position, rotation) as GameObject;
             controller = pl.GetComponent<CharacterController>();
             transform = pl.transform; 
-            World.Active.EntityManager.AddComponentData(entity, new PlayerMotor(position, rot));
-            World.Active.EntityManager.AddComponentData(entity, new InventoryPlayer(10));
+            World.Active.EntityManager.AddComponentData(entity, new PlayerMotor(position, rot)); 
             World.Active.EntityManager.AddComponentData(entity, new PlayerRegion(0));
             World.Active.EntityManager.AddComponentData(entity, new PlayerCitizen(0));
         }

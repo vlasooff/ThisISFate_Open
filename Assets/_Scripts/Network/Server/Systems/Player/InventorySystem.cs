@@ -14,26 +14,21 @@ namespace Community.Server.Systems
 
     public class InventorySystem : ComponentServer
     {
-        private InventoryManager  inventoryManager;
-        private PlayersInfoComponent playerManager;
+        private ItemsWorldComponent  inventoryManager; 
 
         protected override void onStartedServer(NetManager manager)
         {
-            inventoryManager = ServerManager.manager.inventoryManager;
-            playerManager = ServerManager.manager.playersData;
+            inventoryManager = ServerManager.manager.GetComponent<ItemsWorldComponent>(); 
         //    ServerCallBlack.onCreatePlayer += onCreatePlayer;
-            playerManager.onSendServerData += OnConnectedServer;
+                SyncStateServer.OnCreatedPlayerResponse   += OnConnectedToServer;
         }
 
-        private void OnConnectedServer(PlayerManager manager, NetDataWriter writer)
+        private void OnConnectedToServer(PlayerManager manager, NetDataWriter writer)
         {
              WritePacket(new WorldItemsPacket() { items = inventoryManager.itemWorlds.ToArray() },writer);
-        }
+             WritePacket(manager.playerInventory, writer);
 
-        
-
-      
-
+        } 
         protected override void OnUpdate()
         { 
         }
