@@ -29,7 +29,7 @@ namespace Network
         private bool isChat = false;
         [SerializeField]
         private bool isHost = false;
-        public ServerInfoProxy info;
+        public ServerInfoProxy info; 
         string command = "localhost";
         public string test = "Vitaxa sADddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddaaaaaaaadadadadadadadadada";
         public  struct Test

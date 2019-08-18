@@ -2,6 +2,7 @@
 using Community.Core;
 using Community.Core.Serializables;
 using Community.Other;
+using LiteNetLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,7 @@ namespace Community.Client.Components
         public float _speed = 2;
         public  float jumpForge = 5;
         public ushort idRegion;
+        public NetDataWriter hash_updateSec;
       
         public CPlayerManager(SpawnCurrentPlayer packet,ulong csteamid)
         {

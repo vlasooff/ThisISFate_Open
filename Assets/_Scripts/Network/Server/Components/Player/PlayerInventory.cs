@@ -10,10 +10,11 @@ using UnityEngine;
 namespace Community.Server.Components
 {
     public class PlayerInventory
-    { 
-        public PacketItems[] itemPackets { get; set; }
-        public ItemInventory[] slotsHand { get; set; }
+    {
+        public PacketItems[] itemPackets;
+        public ItemInventory[] slotsHand;
         public ushort AllMassa = 0;
+ 
         public void AddNewPackets(PacketItems packet, EBodyIndex bodyIndex)
         {
             itemPackets[(int)bodyIndex] = packet;
@@ -32,12 +33,12 @@ namespace Community.Server.Components
             }
             return packet;
         }
-        public RemoteCustomPlayer GetCharacterBody(ItemInventory[] packets)
+        public RemoteCustomPlayer GetCharacterBody()
         {
-            ushort[] idlist = new ushort[packets.Length];
-            for (int i = 0; i < packets.Length; i++)
+            ushort[] idlist = new ushort[itemPackets.Length];
+            for (int i = 0; i < itemPackets.Length; i++)
             {
-                idlist[i] = packets[i].id;
+                idlist[i] = itemPackets[i].id;
             }
             RemoteCustomPlayer remoteCustom = new RemoteCustomPlayer(idlist);
             return remoteCustom;
@@ -47,14 +48,15 @@ namespace Community.Server.Components
     [System.Serializable]
     public class PacketItems : ItemInventory
     {
-        public ushort id; 
-      
+        public ushort id;
+        public EBodyIndex index;
         public ushort massaPacket;
         private List<ItemPacket> items;
-        public PacketItems(ushort idItem, ushort countItem,ItemAsset itemAsset) : base(idItem,countItem, itemAsset)
+        public PacketItems(ushort idItem, ushort countItem, EBodyIndex bodyIndex) : base(idItem,countItem )
         {
             id = idItem;
             items = new List<ItemPacket>();
+            index = bodyIndex;
         }
         
         public void CombinePacker(PacketItems newpacket)
@@ -120,8 +122,13 @@ namespace Community.Server.Components
     {
         public ushort id;
         public readonly ItemAsset asset;
-        public ushort count; 
-        
+        public ushort count;
+        public ItemInventory(ushort idItem )
+        {
+            id = idItem;
+            count = 1;
+            asset = Resources.Load($"Prefabs/items/item_{id}") as ItemAsset;
+        }
         public ItemInventory(ushort idItem,ushort countItem)
         {
             id = idItem;

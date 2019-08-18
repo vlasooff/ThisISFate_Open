@@ -94,13 +94,38 @@ namespace Community.Core
         public int index { get; set; }
 
     }
-    public class CommandGiveItem
+    public class CommandChangeItem
+    {
+        public byte oldIndexBody { get; set; }
+        public ushort idOld { get; set; }
+
+        public byte IndexBody { get; set; }
+        public ushort id { get; set; }
+
+    }
+    public class ResponseAddItem
+    {
+        public byte IndexBodyPacket { get; set; }
+        public ushort idItem { get; set; }
+
+        public ResponseAddItem()
+        { }
+        public ResponseAddItem(EBodyIndex index,ushort id)
+        {
+            IndexBodyPacket = (byte)index;
+            idItem = id;
+        }
+    }
+    public class CommandRemoveItem
     {
         public ushort id { get; set; }
+        public ushort index { get; set; }
 
     }
     public class SpawnItemWorldPacket
     {
+        public Vector3 position { get; set; }
+        public float rotY { get; set; }
         public ushort id { get; set; }
         public ushort index { get; set; }
 
@@ -148,9 +173,12 @@ namespace Community.Core
         public ItemWorld[] items { get; set; }
 
     }
-     
 
-   
+    public enum EHandsIndex : byte
+    {
+        Primary, Secondary, ternaty, quaternary, Fivefold
+    }
+
     public enum EBodyIndex : byte
     {
         hats,mask,glasses,shirt,vest,backpack,pants

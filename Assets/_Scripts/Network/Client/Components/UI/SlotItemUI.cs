@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Community.Client.Systems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,40 +14,42 @@ namespace Community.Client.Components
     {
         [SerializeField]
         private RawImage therawImage;
-        public Image Mask;
+        public Image Mask; 
         [SerializeField]
         private Color color;
-        public ushort id;
-        public ushort count;
+        public ItemInventory item; 
         public Text countText;
-        Color backcolor;
+        Color backcolor; 
 
-  
-   
-
-
-
-        public void OnPointerEnter(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
         {
             Mask.color = color; 
 
         }
-        public void SetIcon(Texture2D icon, ushort iditem)
+        public virtual void SetItem(ItemInventory newitem)
         {
-            backcolor = Mask.color;
-            therawImage.texture = icon;
-            id = iditem;
+            if(item == null)
+            { 
+                backcolor = Mask.color;
+                therawImage.enabled = true;
+                therawImage.texture = GetItemIcon(newitem.id);
+                item = newitem;
+            } 
             //        tooltip.text = string.Format("{0} Massa: {1}", InventoryUI.instance.player.theInventory.info.ItemsAll[iditem].worldItem.nameItem, InventoryUI.instance.player.theInventory.info.ItemsAll[iditem].massa);
 
         }
+        private Texture2D GetItemIcon(ushort id)
+        {
+            return Resources.Load<Texture2D>($"Prefabs/items/icons/icon_{id}");
+        }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public virtual void OnPointerExit(PointerEventData eventData)
         {
             Mask.color = backcolor;  
         }
 
 
-        public void OnPointerClick(PointerEventData eventData)
+        public virtual void OnPointerClick(PointerEventData eventData)
         {
             Debug.Log("OnSubmit");
           //  if (MenuPanel.instance.isActive)

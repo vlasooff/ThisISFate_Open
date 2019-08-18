@@ -5,20 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Community.Client.Components 
 {
     public class InventoryCManager : MonoBehaviour 
-    { 
-        public CharaterModels models; 
+    {  
         public ItemComponent[] itemWorlds = new ItemComponent[0];
-        public List<UIPacketItems> PacketItems = new List<UIPacketItems>();
+        public UIPacketItems[] PacketItems = new UIPacketItems[0];
+        public UISlotBody[] UISlotBody = new UISlotBody[7];
 
-        public SlotItemUI[] slotsCharacter; 
+
         public SlotItemUI[] Arms;
 
-        public GameObject PrefabIconPacket; 
-        public GameObject PrefabIconItem;
+        public UIPacketItems PrefabSlotPacket; 
+        public SlotItemUI PrefabSlotItem;
         public Transform ParrentItemsInventory;
         public Transform ParrentNearbyInventory;
 
@@ -30,4 +31,7 @@ namespace Community.Client.Components
 
         }
     }
+ 
+
+
 }

@@ -2,6 +2,7 @@
 using Community.Core;
 using Community.Core.Serializables;
 using Community.Other;
+using Community.Server.Systems;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using System;
@@ -41,8 +42,19 @@ namespace Community.Server.Components
             password = packet.password;
             peer = _peer;
             peer.Tag = this;
-            Debug.Log($"[S] Create playermanager ID {id} STEAMID {packet.steamid}"); 
-    
+            Debug.Log($"[S] Create playermanager ID {id} STEAMID {packet.steamid}");
+            SyncStateServer.onPlayerSec += OnUpdState;
+
+
+        }
+
+        private void OnUpdState()
+        {
+            if(hash_response_sec.Length > 0)
+            { 
+                peer.Send(hash_response_sec, DeliveryMethod.ReliableOrdered);
+                hash_response_sec.Reset();
+            }
         }
 
         /// <summary>
@@ -104,7 +116,7 @@ namespace Community.Server.Components
             playerJoined.custom   = World.Active.EntityManager.GetComponentData<CustomCharacter>(entity);
             playerJoined.customHead = World.Active.EntityManager.GetComponentData<CharacterCustomHead>(entity);
             playerJoined.customBody = World.Active.EntityManager.GetComponentData<CharacterCustomBody>(entity);
-            playerJoined.player = new RemoteCustomPlayer(playerInventory.slotsCharacter);
+            playerJoined.player = playerInventory.GetCharacterBody();
 
             return playerJoined;
         }
