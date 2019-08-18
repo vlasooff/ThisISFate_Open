@@ -27,6 +27,7 @@ namespace Community.Server.Components
         public DateTime createUser;
         PlayerServerData playerdata;
         public PlayerInventory playerInventory;
+        public NetDataWriter hash_response_sec;
 
         public PlayerManager(JoinPacket packet, ushort _id, NetPeer _peer)
         {
@@ -40,7 +41,7 @@ namespace Community.Server.Components
             password = packet.password;
             peer = _peer;
             peer.Tag = this;
-            Debug.Log($"[S] Create playermanager ID {id} STEAMID {packet.steamid}");
+            Debug.Log($"[S] Create playermanager ID {id} STEAMID {packet.steamid}"); 
     
         }
 
@@ -103,6 +104,8 @@ namespace Community.Server.Components
             playerJoined.custom   = World.Active.EntityManager.GetComponentData<CustomCharacter>(entity);
             playerJoined.customHead = World.Active.EntityManager.GetComponentData<CharacterCustomHead>(entity);
             playerJoined.customBody = World.Active.EntityManager.GetComponentData<CharacterCustomBody>(entity);
+            playerJoined.player = new RemoteCustomPlayer(playerInventory.slotsCharacter);
+
             return playerJoined;
         }
 

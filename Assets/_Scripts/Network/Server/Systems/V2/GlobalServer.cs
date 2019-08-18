@@ -1,6 +1,6 @@
 ﻿using Community.Core;
 using Community.Core.Serializables;
-using Community.Server.Components;
+using Community.Server.Components; 
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Network.Core;
@@ -20,12 +20,14 @@ namespace Community.Server
         ServerProxy m_proxy;
         ServerInfoProxy m_info;
         private bool m_isRunServer = false;
+        public static ModuleSystem moduleSystem;
         protected override bool IsLog => false;
         private List<Action<NetPacketReader, NetPeer>> message = new List<Action<NetPacketReader, NetPeer>>();
         protected override void OnCreateManager()
         {
             base.OnCreateManager();
-            ServerCallBlack.onStartServer += (NetManager manager) =>
+            moduleSystem = new ModuleSystem();
+            ServerCallBlack.onStartedServer += (NetManager manager) =>
             {
                 Debug.Log($"[SERVER] Server started: {StartedServer()}");
             };
@@ -45,7 +47,7 @@ namespace Community.Server
                 m_proxy._packetProcessor = new NetPacketProcessor();
                 m_proxy._logicTimer = new LogicTimer(OnLogicUpdate);
                 m_proxy._logicTimer.Start();
-
+                
                 m_proxy._netManager = new NetManager(this)
                 {
                     AutoRecycle = true
@@ -54,8 +56,8 @@ namespace Community.Server
                 m_proxy._packetProcessor.RegisterNestedType((w, v) => w.Put(v), reader => reader.GetColor32());
                 ServerCallBlack.RegisterNestedTypes(m_proxy._packetProcessor);
                 m_isRunServer = true;
-                ServerCallBlack.isServerRun = true;
-                ServerCallBlack.onStartedServer?.Invoke(m_proxy._netManager);
+                ServerCallBlack.isServerRun = true; 
+                ServerCallBlack.onStartServer?.Invoke(m_proxy._netManager);
                 message.Add(Msg);
                 message.Add(Msg);
                 message.Add(MsgSerialized);
@@ -112,7 +114,7 @@ namespace Community.Server
             if (messageType == UnconnectedMessageType.DiscoveryRequest)
             {
                 LogModule("Received discovery request. Send discovery response");
-                // _Manager.SendDiscoveryResponse(new byte[] { 1 }, remoteEndPoint);
+                m_proxy._netManager.SendDiscoveryResponse(new byte[] { 1 }, remoteEndPoint);
 
             }
         }
@@ -135,7 +137,7 @@ namespace Community.Server
         { 
             byte id = reader.GetByte();
             message[id].Invoke(reader, peer);
-             
+     
          
         }
         #region OnMessage 

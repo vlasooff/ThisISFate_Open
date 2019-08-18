@@ -34,7 +34,7 @@ namespace Community.Client.Systems
 
         private void OnDefaultCharacter(CharacterDefaultPacket obj)
         {
-            customManager.characterDefault = obj;
+          //  customManager.characterDefault = obj;
         } 
         public void UpdateCustom()
         {

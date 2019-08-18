@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace Community.Client.Systems
 {
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class InventoryCSystem : ComponentClient
     {
@@ -25,15 +26,18 @@ namespace Community.Client.Systems
         Entity enitity;
         protected override void OnStartClient()
         { 
-            ClientData._packetProcessor.RegisterNestedType<ItemInventory>();
+         //   ClientData._packetProcessor.RegisterNestedType<ItemInventory>();
             ClientData._packetProcessor.RegisterNestedType<ItemWorld>(); 
             ClientData._packetProcessor.SubscribeReusable<WorldItemsPacket>(OnWorldItems); 
             ClientData._packetProcessor.SubscribeReusable<CharacterDefaultPacket>(OnDefaultCharacter);
-            enitity = ClientManager.manager.playersManager._clientPlayer.entity;
+          //  ClientData._packetProcessor.SubscribeReusable<PlayerInventory>(OnPlayerInventory);
+           enitity = ClientManager.manager.playersManager._clientPlayer.entity;
             InventoryCManager = ClientManager.manager.inventoryManager;
             customManager = ClientManager.manager.CustomManager;
             instance = this;
-        } 
+        }
+
+ 
 
         public void GetAddItem(ushort idItem, int index)
         {

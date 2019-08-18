@@ -7,34 +7,30 @@ using System.Threading.Tasks;
 namespace Community.Server.Components
 {
     public class ModuleBase : IModule
-    {
-        public byte id { get { return id_module; } }
-        private byte id_module;
+    { 
+        private int index;
 
-        public void Install(byte idModule)
+        public virtual void Install(int idModule)
         {
-            id_module = idModule;
+            index = idModule;
         }
 
-        public void Load()
-        {
-            throw new NotImplementedException();
+        public virtual void Load()
+        { 
+
         }
 
-        public void Save()
-        {
-            throw new NotImplementedException();
+        public virtual void Save()
+        { 
         }
 
-        public void Shutdown()
-        {
-            throw new NotImplementedException();
+        public virtual void Shutdown()
+        { 
         }
     }
     public interface IModule
-    {
-        byte id { get; }
-        void Install(byte id);
+    { 
+        void Install(int idModule);
         void Shutdown();
         void Load();
         void Save();

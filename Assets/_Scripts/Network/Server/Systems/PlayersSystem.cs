@@ -32,11 +32,21 @@ namespace Community.Server
             ServerData._packetProcessor.SubscribeReusable<JoinPacket, NetPeer>(OnJoinReceived);
             ServerData._packetProcessor.RegisterNestedType<UpdatePlayerPacket>();
             ServerData._packetProcessor.RegisterNestedType<ItemWorld>();
-            ServerData._packetProcessor.SubscribeReusable<CreateCharacterPacket, NetPeer>(OnCreateCharacter);
-            SyncStateServer.onUpdateMsec += UpdatePlayers;
+            SyncStateServer.onPlayerMsec += UpdatePlayersMsec;
+            SyncStateServer.onPlayerSec += OnSyncForPlayer;
+            CustomizeSystem.onCreateCharacter += ConnectionPlayer;
             ServerCallBlack.onDisconnectedPlayer += RemovePlayer;
             SyncStateServer.OnCreatedPlayerResponse += OnResponseCreatePlayer;
             playersData.worldConfig = new WorldData();
+        }
+
+        private void OnSyncForPlayer()
+        {
+            for (int i = 0; i < playersData.players.Count; i++)
+            {
+                PlayerManager playerCurrent = playersData.players.ElementAt(i).Value; 
+                playerCurrent.peer.Send(WritePacket(GetUpdatePlayers(playerCurrent)), DeliveryMethod.ReliableOrdered); 
+            }
         }
 
         private void OnResponseCreatePlayer(PlayerManager manager, NetDataWriter packet)
@@ -46,32 +56,12 @@ namespace Community.Server
 
         protected override void OnStartServer(NetManager manager)
         {
-            playersData.worldConfig = new WorldData();
-            playersData.worldConfig.worldConfig = new WorldConfig();
+            playersData.worldConfig = new WorldData(); 
             playersData.worldConfig.Load();
 
         }
 
-        private void OnCreateCharacter(CreateCharacterPacket arg1, NetPeer arg2)
-        {
-            PlayerManager player = (PlayerManager)arg2.Tag;
-            if (player != null)
-            {
-                if (player.isNew)
-                {
-                    CharacterCustomBody customBody = new CharacterCustomBody(arg1.Color_body, arg1.id_pants, arg1.id_body);
-                    CharacterCustomHead customHead = new CharacterCustomHead(arg1.Color_beard, arg1.Color_Hair, arg1.Color_eyes, arg1.Color_lips, arg1.id_hair, arg1.id_beard, arg1.id_head, 0);
-                    CustomCharacter custom = new CustomCharacter(0, playersData.worldConfig.worldConfig.massa_Character_default, 0, arg1.Gender);
-                    EntityManager.AddComponentData(player.entity, custom);
-                    EntityManager.AddComponentData(player.entity, customHead);
-                    EntityManager.AddComponentData(player.entity, customBody);
-                    ConnectionPlayer(player , arg2); 
-                }
-                else Debug.LogError("[S] Create character isNew false");
-            }
-            else
-                Debug.LogError("[S] Create character null");
-        }
+        
         public void OnJoinReceived(JoinPacket join , NetPeer peer)
         {
             if (peer != null)
@@ -89,20 +79,20 @@ namespace Community.Server
                     else 
                     {
                         peer.Send(WritePacket(new PlayerAccountPacket(EUserState.login)), DeliveryMethod.ReliableOrdered);
+                        ConnectionPlayer(playerServer);
                     }
                 }
                 else
                 {
                     peer.Send(WritePacket(new PlayerAccountPacket(EUserState.create)), DeliveryMethod.ReliableOrdered);
-                    peer.Send(WritePacket(new CharacterDefaultPacket(playersData.worldConfig.worldConfig)), DeliveryMethod.ReliableOrdered);
+                   // 
                     playerServer.isNew = true;
                     return;
                 }
-                ConnectionPlayer(  playerServer, peer);
             }
             else Debug.LogError(this + " Error peer != null");
         }
-        private void ConnectionPlayer(PlayerManager playerServer, NetPeer peer)
+        private void ConnectionPlayer(PlayerManager playerServer)
         {
             try
             {
@@ -122,10 +112,8 @@ namespace Community.Server
                     LogDev($"[S] Add new player " + playerServer.id);
                     ServerCallBlack.onCreatePlayer?.Invoke(playerServer,true);
                    
-                }
-           
-               
-                 ServerData._netManager.SendToAll(WritePacket(playerServer.GetJoinedPacket()), DeliveryMethod.ReliableOrdered, peer);//Отправка базовых данных
+                } 
+                 ServerData._netManager.SendToAll(WritePacket(playerServer.GetJoinedPacket()), DeliveryMethod.ReliableOrdered,playerServer.peer);//Отправка базовых данных
                  
             }
             catch (System.Exception ex)
@@ -160,7 +148,7 @@ namespace Community.Server
            
 
         }
-        protected void UpdatePlayers(NetDataWriter packet)
+        protected void UpdatePlayersMsec()
         { 
             for (int i = 0; i < playersData.players.Count; i++)
             {
@@ -215,11 +203,11 @@ namespace Community.Server
             return playersPacket;
         }
     }
+    [System.Serializable]
     public class WorldData
     {
-        public ushort usersCount { get; set; }
-        string name = "/World.dat";
-        public WorldConfig worldConfig;
+        public ushort usersCount;
+        string name = "/World.dat"; 
 
         public void Load()
         {
@@ -232,27 +220,14 @@ namespace Community.Server
             {
                 usersCount = reader.GetUShort(); 
             }
-            worldConfig = SaveManager.LoadJSON<WorldConfig>($"{ServerManager.manager.serverInfoProxy.serverFolder}/World.config");
-            if (worldConfig == null)
-            {
-                worldConfig = new WorldConfig(); 
-                worldConfig.Radius = 250;
-                worldConfig.isRandomMassaCharacter = true;
-                worldConfig.massa_Character_default = 20;
-                worldConfig.id_pants_default_woman= 6;
-                worldConfig.id_shirt_default_woman = 5;
-                worldConfig.id_pants_default_man = 4; 
-                worldConfig.id_shirt_default_man = 3;
-           
-            }
+          
              
         }
         public void Save()
         {
             NetDataWriter writer = new NetDataWriter();
             writer.Put(usersCount); 
-            SaveManager.Save(writer, ServerManager.manager.serverInfoProxy.serverFolder + name);
-            SaveManager.SaveJSON(  worldConfig, $"{ ServerManager.manager.serverInfoProxy.serverFolder } /World.config");
+            SaveManager.Save(writer, ServerManager.manager.serverInfoProxy.serverFolder + name); 
         }
     }
    

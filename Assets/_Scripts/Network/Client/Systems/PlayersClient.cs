@@ -27,6 +27,7 @@ namespace Community.Client
             ClientData._packetProcessor.RegisterNestedType<UpdatePlayerPacket>();
             ClientData._packetProcessor.RegisterNestedType<CustomCharacter>();
             ClientData._packetProcessor.RegisterNestedType<CharacterCustomHead>();
+            ClientData._packetProcessor.RegisterNestedType<RemoteCustomPlayer>();
             ClientData._packetProcessor.RegisterNestedType<CharacterCustomBody>();
             ClientData._packetProcessor.RegisterNestedType<PlayerData>();
             ClientData._packetProcessor.SubscribeReusable<PlayerJoinedPacket>(OnPlayerJoined);

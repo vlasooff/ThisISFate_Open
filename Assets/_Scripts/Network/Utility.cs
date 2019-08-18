@@ -11,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
@@ -24,7 +27,10 @@ namespace Network
     {
         private bool isSnow = false;
         private bool isChat = false;
+        [SerializeField]
+        private bool isHost = false;
         public ServerInfoProxy info;
+        string command = "localhost";
         public string test = "Vitaxa sADddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddaaaaaaaadadadadadadadadada";
         public  struct Test
         {
@@ -44,18 +50,34 @@ namespace Network
             NetDataReader reader = new NetDataReader(text);
             Debug.Log(writer.Length  + " = Comp: " + compression.Length);
             Debug.Log("Test: " + reader.GetColor()); Debug.Log("Test: " + reader.GetColor());
-        } 
-      
+        }
+        [EasyButtons.Button]
+        public void Test2()
+        {
+            Debug.Log("IP " + IPAddress.Any);
+            Debug.Log("IP " + IPAddress.IPv6Any);
+            Debug.Log("IP " + IPAddress.Broadcast); 
+            Debug.Log("IP " + GetIpAddress().ToArray().ToString());
+        }
+        public static IEnumerable<IPAddress> GetIpAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            return (from ip in host.AddressList where !IPAddress.IsLoopback(ip) select ip).ToList();
+        }
         private void Update()
         {
-
+          
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (isSnow) isSnow = false;
                 else isSnow = true;
             }
         }
- 
+        public static IPAddress GetIPAddress2()
+        {
+            return Dns.GetHostAddresses(Dns.GetHostName()).Where(address =>
+            address.AddressFamily == AddressFamily.InterNetwork).First();
+        }  
         public void OnGUI()
         {
             if(isSnow)
@@ -70,12 +92,13 @@ namespace Network
             if (!ClientCallBlack.isConnected)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Commands line", GUILayout.Width(380));
-                string command = GUILayout.TextField("localhost");
+                  GUILayout.Label("Commands line", GUILayout.Width(380));
+                command = GUILayout.TextField(command);
                 if (GUILayout.Button("Connect"))
                 {
                     ClientManager.manager.clientData.Connect(command);
                 }
+                if (isHost) 
                 if (GUILayout.Button("Host"))
                 {
                     ServerManager.manager.serverProxy.StartServer(info);

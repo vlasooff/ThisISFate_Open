@@ -33,6 +33,7 @@ namespace Community.Core
         public bool NewPlayer { get; set; }
         public ushort id { get; set; }
         public ulong steamid { get; set; }
+        public RemoteCustomPlayer player { get; set; }
         public CustomCharacter custom { get; set; }
         public CharacterCustomBody customBody { get; set; }
         public CharacterCustomHead customHead { get; set; }
@@ -54,25 +55,8 @@ namespace Community.Core
         login, create, wrongPassword
     }
     #region EditorPlayer
-    public class NewCharaterPacket
-    {
-        public byte id_beard { get; set; }
-        public Color32 Color_beard { get; set; }
-        public Color32 Color_Hair { get; set; }
-        public byte IDColorBody { get; set; }
-
-    }
-    [System.Serializable]
-    public class WorldConfig
-    {
-        public ushort Radius;
-        public bool isRandomMassaCharacter;
-        public byte massa_Character_default;
-        public ushort id_shirt_default_man;
-        public ushort id_pants_default_man;
-        public ushort id_shirt_default_woman;
-        public ushort id_pants_default_woman;
-    }
+   
+     
     public class CharacterDefaultPacket
     {
         public byte massa { get; set; }
@@ -83,16 +67,7 @@ namespace Community.Core
         public CharacterDefaultPacket()
 
         { }
-        public CharacterDefaultPacket(WorldConfig config)
-        {
-            if (config.isRandomMassaCharacter) massa = (byte)Random.Range(0, 100);
-            else
-                massa = config.massa_Character_default;
-            id_pants_man = config.id_pants_default_man;
-            id_shirt_man = config.id_shirt_default_man;
-            id_shirt_F = config.id_shirt_default_man;
-            id_pants_F = config.id_pants_default_man;
-        }
+   
     }
     public class CreateCharacterPacket
     {
@@ -115,8 +90,7 @@ namespace Community.Core
 
 
     public class CommandAddItem
-    {
-        public ushort id { get; set; }
+    { 
         public int index { get; set; }
 
     }
@@ -125,10 +99,15 @@ namespace Community.Core
         public ushort id { get; set; }
 
     }
-    public class CommandRemoveItem
+    public class SpawnItemWorldPacket
     {
         public ushort id { get; set; }
-        public ushort idUshort { get; set; }
+        public ushort index { get; set; }
+
+    }
+    public class DestroyItemWorldPacket
+    {
+        public ushort index { get; set; } 
 
     }
     [System.Serializable]
@@ -169,73 +148,14 @@ namespace Community.Core
         public ItemWorld[] items { get; set; }
 
     }
-    public class ItemsPackets
+     
+
+   
+    public enum EBodyIndex : byte
     {
-        public ItemPacket[] inventory { get; set; }
-
-        public ItemsPackets(ItemPacket[] array)
-        {
-            inventory = array;
-        }
+        hats,mask,glasses,shirt,vest,backpack,pants
     }
-
-    public class PlayerInventory
-    {
-        public ItemInventory[] slotsCharacter { get; set; }
-        public ItemPacket[] itemPackets { get; set; }
-        public ItemInventory[] slotsHand { get; set; }
-    }
-    [System.Serializable]
-    public struct ItemPacket :  INetSerializable
-    {
-        public ushort id;
-        public ItemInventory[] items;
-        public ItemPacket(ushort idItem)
-        {
-            id = idItem;
-            items = new ItemInventory[0];
-        }
-
-        public void Serialize(NetDataWriter writer)
-        {
-            writer.Put(id);
-            writer.Put(items.Length);
-            for (int i = 0; i < items.Length; i++)
-            {
-                items[i].Serialize(writer);
-            }
-        }
-
-        public void Deserialize(NetDataReader reader)
-        {
-            id = reader.GetUShort();
-            int count = reader.GetInt();
-            items = new ItemInventory[count];
-            for (int i = 0; i < count; i++)
-            {
-                items[i].Deserialize(reader);
-            }
-
-        }
-    }
-    [System.Serializable]
-    public struct ItemInventory :  INetSerializable
-    {
-        public ushort id;
-        public ushort count;
-
-        public void Deserialize(NetDataReader reader)
-        {
-            id = reader.GetUShort();
-            count = reader.GetUShort();
-        }
-
-        public void Serialize(NetDataWriter writer)
-        {
-            writer.Put(id);
-            writer.Put(count);
-        }
-    }
+   
 
     #endregion
 
@@ -415,6 +335,27 @@ namespace Community.Core
 
         }
 
+    }
+    [System.Serializable]
+    public struct RemoteCustomPlayer : INetSerializable
+    { 
+        public ushort[] idlist;
+            
+        public RemoteCustomPlayer( ushort[] m_idlist)
+        { 
+            idlist = m_idlist;
+        }
+       
+        public void Deserialize(NetDataReader reader)
+        { 
+            idlist =  reader.GetUShortArray();
+        }
+
+        public void Serialize(NetDataWriter writer)
+        { 
+                  writer.PutArray(idlist); 
+             
+        }
     }
     [System.Serializable]
     public struct CharacterCustomBody : IComponentData, INetSerializable

@@ -7,6 +7,7 @@ using Network.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
@@ -24,13 +25,15 @@ namespace Community.Server.Components
         public void StartServer(ServerInfoProxy info)
         {
 
-            ServerCallBlack.onStartServer?.Invoke(_netManager);
+            ServerCallBlack.onStartedServer?.Invoke(_netManager);
             info.config = new ServerConfig("Test_1");
             info.config.Load();
             if (_netManager.IsRunning)
                 return;
             _netManager.SimulateLatency = info.SimulateLatency;
-            _netManager.SimulatePacketLoss = info.SimulatePacketLoss;
+            _netManager.SimulatePacketLoss = info.SimulatePacketLoss; 
+            _netManager.MergeEnabled = true;
+            _netManager.NatPunchEnabled = true;
             _netManager.Start(info.config.port);
 
             EventManager.EventMethod(typeof(EventStartServer), new object[0]);

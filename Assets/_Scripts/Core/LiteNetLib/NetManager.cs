@@ -976,7 +976,7 @@ namespace LiteNetLib
             _logicThread.Start();
             return true;
         }
-
+      
         /// <summary>
         /// Start logic thread and listening on selected port
         /// </summary>
@@ -995,8 +995,8 @@ namespace LiteNetLib
         /// </summary>
         /// <param name="port">port to listen</param>
         public bool Start(int port)
-        {
-            return Start(IPAddress.Any, IPAddress.IPv6Any, port);
+        { 
+            return Start(IPAddress.Any,IPAddress.IPv6Any, port);
         }
 
         /// <summary>
