@@ -15,7 +15,7 @@ namespace Community.Server.Systems
         {
             ItemsGlobal = ServerManager.manager.GetComponent<ItemsWorldComponent>();
             SyncStateServer.OnCreatedPlayerResponse += OnConnectedToServer;
-            SyncStateServer.onUpdateSec += OnForPlayerSec;
+            SyncStateServer.onUpdateSec += OnForPlayerSec; 
             ServerData._packetProcessor.SubscribeReusable<CommandAddItem, NetPeer>(OnAddItemInventory);
         }
 
@@ -27,7 +27,7 @@ namespace Community.Server.Systems
         private void OnConnectedToServer(PlayerManager manager, NetDataWriter writer)
         {
             WritePacket(new WorldItemsPacket() { items = ItemsGlobal.itemWorlds.ToArray() }, writer);
-            WritePacket(manager.playerInventory, writer);
+     
 
         }
         #region ItemWorld

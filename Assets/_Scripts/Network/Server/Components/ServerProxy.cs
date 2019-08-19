@@ -63,9 +63,12 @@ namespace Community.Server.Components
             return _cachedWriter;
         }
         public NetDataWriter WritePacket<T>(T packet,NetDataWriter writer) where T : class, new()
-        { 
+        {
+            if (writer.Length == 0)
+                return WritePacket(packet);
+            else
             _packetProcessor.Write(writer, packet);
-            return _cachedWriter;
+            return writer;
         }
     } 
 }

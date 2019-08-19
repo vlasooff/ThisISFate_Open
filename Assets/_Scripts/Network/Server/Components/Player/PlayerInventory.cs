@@ -11,8 +11,8 @@ namespace Community.Server.Components
 {
     public class PlayerInventory
     {
-        public PacketItems[] itemPackets;
-        public ItemInventory[] slotsHand;
+        public PacketItems[] itemPackets = new PacketItems[0];
+        public ItemInventory[] slotsHand = new ItemInventory[0];
         public ushort AllMassa = 0;
  
         public void AddNewPackets(PacketItems packet, EBodyIndex bodyIndex)

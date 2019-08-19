@@ -21,10 +21,10 @@ namespace Community.Client.Components
         public UIPacketItems PrefabSlotPacket; 
         public SlotItemUI PrefabSlotItem;
         public Transform ParrentItemsInventory;
-        public Transform ParrentNearbyInventory;
+        public Transform ParrentNearbyInventory; 
 
-        
-      
+     
+
 
         public void GetItem()
         {

@@ -51,7 +51,7 @@ namespace Community.Server
 
         private void OnResponseCreatePlayer(PlayerManager manager, NetDataWriter packet)
         { 
-            packet = WritePacket(SendServerInfo(manager)); //Отправка новому игроку данных сервера, игроков, и его данные 
+           WritePacket(SendServerInfo(manager),packet); //Отправка новому игроку данных сервера, игроков, и его данные 
         }
 
         protected override void OnStartServer(NetManager manager)
@@ -94,8 +94,7 @@ namespace Community.Server
         }
         private void ConnectionPlayer(PlayerManager playerServer)
         {
-            try
-            {
+           
                 if (!playerServer.isNew)
                 {
                     playersData.players.Add(playerServer.id, playerServer); 
@@ -114,12 +113,7 @@ namespace Community.Server
                    
                 } 
                  ServerData._netManager.SendToAll(WritePacket(playerServer.GetJoinedPacket()), DeliveryMethod.ReliableOrdered,playerServer.peer);//Отправка базовых данных
-                 
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError("[S] [ADDPLAYER]" + ex.Message);
-            }
+          
         }
         protected override void onUpdateStateServer(NetDataWriter dataWriter)
         {

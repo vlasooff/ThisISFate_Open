@@ -107,7 +107,7 @@ namespace Community.Server
         }
         public virtual NetDataWriter WritePacket<T>(T packet,NetDataWriter writer) where T : class, new()
         {
-            return ServerManager.manager.serverProxy.WritePacket(packet, writer);
+            return ServerManager.manager.serverProxy.WritePacket(packet, writer); 
 
         }
         public virtual NetDataWriter WriteSerializable<T>(PacketType type, T packet) where T : struct, INetSerializable

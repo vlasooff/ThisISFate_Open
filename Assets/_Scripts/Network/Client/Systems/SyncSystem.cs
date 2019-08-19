@@ -24,9 +24,9 @@ namespace Community.Client.Systems
         private float timeUpdateSec;
         private float timeUpdateMinute;
         private PlayersManager playersManager;
-        private NetDataWriter Hash_UpdateMsec;
-        private NetDataWriter Hash_UpdateSec;
-        private NetDataWriter Hash_UpdateMinute;
+        private NetDataWriter Hash_UpdateMsec = new NetDataWriter();
+        private NetDataWriter Hash_UpdateSec = new NetDataWriter();
+        private NetDataWriter Hash_UpdateMinute = new NetDataWriter();
 
         protected override void OnStartClient()
         {

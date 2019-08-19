@@ -28,12 +28,13 @@ namespace Community.Server.Components
         public DateTime createUser;
         PlayerServerData playerdata;
         public PlayerInventory playerInventory;
-        public NetDataWriter hash_response_sec;
+        public NetDataWriter hash_response_sec = new NetDataWriter();
 
         public PlayerManager(JoinPacket packet, ushort _id, NetPeer _peer)
         {
             id = _id;
             entity = World.Active.EntityManager.CreateEntity();
+            playerInventory = new PlayerInventory();
            
             World.Active.EntityManager.AddComponentData(entity, new PlayerID(id, packet.steamid, packet.UserName));
             World.Active.EntityManager.SetName(entity, "PlayerServer_" + packet.UserName);
@@ -44,7 +45,6 @@ namespace Community.Server.Components
             peer.Tag = this;
             Debug.Log($"[S] Create playermanager ID {id} STEAMID {packet.steamid}");
             SyncStateServer.onPlayerSec += OnUpdState;
-
 
         }
 

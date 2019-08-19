@@ -43,9 +43,8 @@ namespace Community.Server.Systems
             if (player != null)
             {
                 NetDataWriter writer = new NetDataWriter();
-                OnDesConnectResponse?.Invoke(player, writer);
-                if (writer.Length > 0)
-
+                OnCreatedPlayerResponse?.Invoke(player, writer);
+                if (writer.Length > 0) 
                     player.peer.Send(writer, DeliveryMethod.ReliableOrdered);
             }
             else Debug.LogError("[S] OnCreate Event not called");

@@ -19,10 +19,23 @@ namespace Community.Client.Components
         public GameObject createCharater;
         public GameObject login;
         public GameObject UIServer;
+        public GameObject Menu;
         public ClientData m_dataClient;
         public ClientDataSteam m_dataClientSteam;
         public Text message;
         CreateCharacterPacket createCharacter = new CreateCharacterPacket();
+
+
+        public void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Tab))
+            {
+                if (!Menu.active)
+                    Menu.SetActive(true);
+                else
+                    Menu.SetActive(false);
+            }
+        }
         public void Login()
         {
             m_dataClient.SendPacket(new JoinPacket { UserName = username.text, steamid = m_dataClientSteam.steamid , password = passworld.text }, DeliveryMethod.ReliableOrdered);
