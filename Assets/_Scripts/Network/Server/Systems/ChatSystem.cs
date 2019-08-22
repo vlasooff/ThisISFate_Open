@@ -3,6 +3,7 @@ using Community.Core.Serializables;
 using Community.Other;
 using Community.Server.Components;
 using LiteNetLib;
+using LiteNetLib.Utils;
 using Network.Core.Attributes;
 using Network.Core.Serializables;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Community.Server
         ChatComponent chat;
         PlayersInfoComponent playersData;
 
-        protected override void onStartedServer(NetManager manager)
+        protected override void onStartedServer(NetPacketProcessor _packetProcessor)
         {  
                 server = ServerManager.manager.serverProxy;
                 chat = ServerManager.manager.chatData;

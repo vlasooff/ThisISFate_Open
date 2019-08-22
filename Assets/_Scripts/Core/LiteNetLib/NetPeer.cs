@@ -179,8 +179,7 @@ namespace LiteNetLib
         public DateTime RemoteUtcTime
         {
             get { return new DateTime(DateTime.UtcNow.Ticks + _remoteDelta); }
-        }
-
+        } 
         /// <summary>
         /// Time since last packet received (including internal library packets)
         /// </summary>

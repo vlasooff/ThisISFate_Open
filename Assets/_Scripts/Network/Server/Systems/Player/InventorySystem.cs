@@ -11,7 +11,7 @@ namespace Community.Server.Systems
         private ItemsWorldComponent ItemsGlobal;
         private ServerProxy ServerData => ServerManager.manager.serverProxy;
 
-        protected override void onStartedServer(NetManager manager)
+        protected override void onStartedServer(NetPacketProcessor _packetProcessor)
         {
             ItemsGlobal = ServerManager.manager.GetComponent<ItemsWorldComponent>();
             SyncStateServer.OnCreatedPlayerResponse += OnConnectedToServer;
@@ -21,12 +21,13 @@ namespace Community.Server.Systems
 
         private void OnForPlayerSec(NetDataWriter packet)
         {
-
+            
         }
 
         private void OnConnectedToServer(PlayerManager manager, NetDataWriter writer)
         {
-            WritePacket(new WorldItemsPacket() { items = ItemsGlobal.itemWorlds.ToArray() }, writer);
+            manager.peer.Send(WritePacket(new WorldItemsPacket() { items = ItemsGlobal.itemWorlds.ToArray() }), DeliveryMethod.ReliableOrdered);
+            Debug.Log("[S] OnConnectedToServer");
      
 
         }

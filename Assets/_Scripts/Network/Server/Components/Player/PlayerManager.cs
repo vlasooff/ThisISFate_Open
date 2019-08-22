@@ -36,7 +36,7 @@ namespace Community.Server.Components
             entity = World.Active.EntityManager.CreateEntity();
             playerInventory = new PlayerInventory();
            
-            World.Active.EntityManager.AddComponentData(entity, new PlayerID(id, packet.steamid, packet.UserName));
+            World.Active.EntityManager.AddComponentData(entity, new PlayerID(id, packet.steamid, packet.UserName)); 
             World.Active.EntityManager.SetName(entity, "PlayerServer_" + packet.UserName);
             steamID = packet.steamid;
             username = packet.UserName;
@@ -66,8 +66,7 @@ namespace Community.Server.Components
          SaveManager.LoadJSON<PlayerServerData>($"{ServerManager.manager.serverInfoProxy.serverFolder}/Players/player_{username}/Player_{username}.dat");
             if (playerdata == null)
             {
-                SaveManager.CreateServerFolder("Players"); 
-                SaveManager.CreateServerFolder($"Players/player_{username}");
+                SaveManager.CreateFolder($"{ServerManager.manager.serverInfoProxy.serverFolder}/Players/player_{username}/");
                 createUser = DateTime.Now; 
                 return false;
             }

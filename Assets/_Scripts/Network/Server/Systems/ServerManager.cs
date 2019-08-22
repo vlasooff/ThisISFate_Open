@@ -22,6 +22,7 @@ namespace Community.Server
         public PlayersInfoComponent playersData;
         public RegionsComponent regionsComponent; 
         public static ServerManager manager;
+        private IManager[] managers = new IManager[1] { new EntitysManager() };
 
         private void Awake()
         {
@@ -33,7 +34,21 @@ namespace Community.Server
             if (!serverProxy) Debug.Log("[S] ServerManager " +
                 "null!");
         }
+        public T GetManager<T>(EManagers id)
+        {
+
+            return (T)managers[(int)id];
+
+        }
      
+    }
+    public enum EManagers : int
+    {
+        entitysnet,server
+    }
+    public interface IManager
+    {
+        
     }
      
 }

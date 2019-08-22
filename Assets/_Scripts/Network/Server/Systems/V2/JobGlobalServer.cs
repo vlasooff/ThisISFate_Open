@@ -29,7 +29,7 @@ namespace Community.Server
         protected override void OnCreateManager()
         {
             base.OnCreateManager();
-            ServerCallBlack.onStartServer += (NetManager manager) =>
+            ServerCallBlack.onStartServer += (NetPacketProcessor _packetProcessor) =>
             {
                 Debug.Log($"[SERVER] Server started: {StartedServer()}");
             };
@@ -57,7 +57,7 @@ namespace Community.Server
                 ServerCallBlack.RegisterNestedTypes(m_proxy._packetProcessor);
                 m_isRunServer = true;
                 ServerCallBlack.isServerRun = true;
-                ServerCallBlack.onStartedServer?.Invoke(m_proxy._netManager);
+                ServerCallBlack.onStartedServer?.Invoke(m_proxy._packetProcessor);
                 return true;
             }
             catch (System.Exception ex)

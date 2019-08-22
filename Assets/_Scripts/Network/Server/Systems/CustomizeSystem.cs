@@ -20,9 +20,8 @@ namespace Community.Server.Systems
         public static OnCreateCharacter onCreateCharacter;
         private CharacterConfig config;
         private ServerProxy ServerData => ServerManager.manager.serverProxy;
-        protected override void OnStartServer(NetManager manager)
-        {
-            base.OnStartServer(manager);
+        protected override void OnStartServer(NetPacketProcessor _packetProcessor)
+        { 
             SyncStateServer.OnConnectResponse += OnConnResponse;
             ServerData._packetProcessor.RegisterNestedType<RemoteCustomPlayer>();  
             ServerData._packetProcessor.SubscribeReusable<CreateCharacterPacket, NetPeer>(OnCreateCharacter);
@@ -36,10 +35,10 @@ namespace Community.Server.Systems
             base.OnStopRunning();
             ServerData._packetProcessor.RemoveSubscription<CreateCharacterPacket>();
         }
-
-        private void OnCreateCharacter(CreateCharacterPacket arg1, NetPeer arg2)
+        /*
+        private void OnCreateCharacter(CreateCharacterPacket  arg1, NetPeer arg2)
         {
-            PlayerManager player = (PlayerManager)arg2.Tag;
+            PlayerManager player = null;
             if (player != null)
             {
                 if (player.isNew)
@@ -57,7 +56,24 @@ namespace Community.Server.Systems
                 Debug.LogError("[S] Create character null");
             onCreateCharacter?.Invoke(player);
         }
-
+        */ 
+         private void OnCreateCharacter(CreateCharacterPacket arg1, NetPeer arg2)
+        {
+            EntityPlayerManager player = (EntityPlayerManager)arg2.Tag;
+            if (player != null)
+            {
+                 
+                    CharacterCustomBody customBody = new CharacterCustomBody(arg1.Color_body, arg1.id_pants, arg1.id_body);
+                    CharacterCustomHead customHead = new CharacterCustomHead(arg1.Color_beard, arg1.Color_Hair, arg1.Color_eyes, arg1.Color_lips, arg1.id_hair, arg1.id_beard, arg1.id_head, 0);
+                    CustomCharacter custom = new CustomCharacter(0, config.massa_Character_default, 0, arg1.Gender);
+                    EntityManager.AddComponentData(player.entityWorld, custom);
+                    EntityManager.AddComponentData(player.entityWorld, customHead);
+                    EntityManager.AddComponentData(player.entityWorld, customBody); 
+            }
+            else
+                Debug.LogError("[S] Create character null");
+          //  onCreateCharacter?.Invoke(player);
+        }
         private void OnConnResponse(PlayerManager manager, NetDataWriter packet)
         { 
             manager.peer.Send(WritePacket(config.GetDefaultPacket()), DeliveryMethod.ReliableOrdered);

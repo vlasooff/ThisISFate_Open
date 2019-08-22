@@ -1,6 +1,7 @@
 ﻿using Community.Core.Serializables;
 using Community.Server.Components;
 using LiteNetLib;
+using LiteNetLib.Utils;
 using System.Linq;
 using Unity.Entities;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace Community.Server.Systems
         PlayersInfoComponent playersManager;
         ServerInfoProxy info;
         TransformsPacket state;
-        protected override void onStartedServer(NetManager manager)
+        protected override void onStartedServer(NetPacketProcessor _packetProcessor)
         {
             playersManager = ServerManager.manager.playersData;
             serverProxy = ServerManager.manager.serverProxy;

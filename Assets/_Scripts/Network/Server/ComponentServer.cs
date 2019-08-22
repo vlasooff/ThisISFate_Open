@@ -80,7 +80,7 @@ namespace Community.Server
         }
         
 
-        protected virtual void onStartedServer(NetManager manager)
+        protected virtual void onStartedServer(NetPacketProcessor _packetProcessor)
         {
         }
         protected virtual void onUpdateStateServer(NetDataWriter dataWriter)
@@ -88,7 +88,7 @@ namespace Community.Server
             
         }
 
-        protected virtual void OnStartServer(NetManager manager)
+        protected virtual void OnStartServer(NetPacketProcessor _packetProcessor)
         {
         }
 

@@ -1,6 +1,7 @@
 ﻿using Community.Server.Components;
 using Community.Server.Systems;
 using LiteNetLib;
+using LiteNetLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace  Community.Server
             ServerCallBlack.onStartServer += InstallModules;
             ServerCallBlack.onShutdownServer += ShutdownModules; 
         }
-        public void InstallModules(NetManager manager)
+        public void InstallModules(NetPacketProcessor _packetProcessor)
         {
             modules.Add(new CharacterModule());
             for (int i = 0; i < modules.Count; i++)

@@ -29,23 +29,26 @@ namespace Community.Server.Systems
         private float timeUpdateMinute;
         private ServerProxy m_proxy;
 
-        protected override void OnStartServer(NetManager manager)
-        {
-            base.OnStartServer(manager);
+        protected override void OnStartServer(NetPacketProcessor _packetProcessor )
+        { 
             m_proxy = ServerManager.manager.serverProxy;
             ServerCallBlack.onConnectedPlayer += OnConnectedResponse;
             ServerCallBlack.onDisconnectedPlayer += OnDConnectedResponse;
             ServerCallBlack.onCreatePlayer += OnPlayerCreated;
         }
 
+        NetDataWriter hash_spawnPlayer= new NetDataWriter();
         private void OnPlayerCreated(PlayerManager player, bool isNew)
         {
             if (player != null)
             {
-                NetDataWriter writer = new NetDataWriter();
-                OnCreatedPlayerResponse?.Invoke(player, writer);
-                if (writer.Length > 0) 
-                    player.peer.Send(writer, DeliveryMethod.ReliableOrdered);
+                OnCreatedPlayerResponse?.Invoke(player, hash_spawnPlayer);
+                if (hash_spawnPlayer.Length > 0)
+                {
+                    player.peer.Send(hash_spawnPlayer, DeliveryMethod.ReliableOrdered);
+                    
+                }
+                Debug.Log("Send " + hash_spawnPlayer.Length);
             }
             else Debug.LogError("[S] OnCreate Event not called");
         }

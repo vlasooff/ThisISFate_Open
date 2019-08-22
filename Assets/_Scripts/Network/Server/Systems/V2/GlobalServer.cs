@@ -27,7 +27,7 @@ namespace Community.Server
         {
             base.OnCreateManager();
             moduleSystem = new ModuleSystem();
-            ServerCallBlack.onStartedServer += (NetManager manager) =>
+            ServerCallBlack.onStartedServer += (NetPacketProcessor _packetProcessor) =>
             {
                 Debug.Log($"[SERVER] Server started: {StartedServer()}");
             };
@@ -57,7 +57,7 @@ namespace Community.Server
                 ServerCallBlack.RegisterNestedTypes(m_proxy._packetProcessor);
                 m_isRunServer = true;
                 ServerCallBlack.isServerRun = true; 
-                ServerCallBlack.onStartServer?.Invoke(m_proxy._netManager);
+                ServerCallBlack.onStartServer?.Invoke(m_proxy._packetProcessor);
                 message.Add(Msg);
                 message.Add(Msg);
                 message.Add(MsgSerialized);

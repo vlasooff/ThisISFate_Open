@@ -14,10 +14,11 @@ namespace Community.Other
 {
     public static class SaveManager
     {
-        public static void CreateServerFolder(string  Folder)
-        { 
-          //  Directory.CreateDirectory($"{ServerManager.manager.serverInfoProxy.serverFolder}/{Folder}");
+        public static void CreateFolder(string Folder)
+        {
+            Directory.CreateDirectory($"{Environment.CurrentDirectory}/{Folder}");
         }
+        
         public static void SaveJSON(object obj,string fileName)
         {
             SaveText(JsonUtility.ToJson(obj),fileName);

@@ -29,6 +29,7 @@ namespace Network
         private bool isChat = false;
         [SerializeField]
         private bool isHost = false;
+        public ushort[] ids;
         public ServerInfoProxy info; 
         string command = "localhost";
         public string test = "Vitaxa sADddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddaaaaaaaadadadadadadadadada";
@@ -54,10 +55,7 @@ namespace Network
         [EasyButtons.Button]
         public void Test2()
         {
-            Debug.Log("IP " + IPAddress.Any);
-            Debug.Log("IP " + IPAddress.IPv6Any);
-            Debug.Log("IP " + IPAddress.Broadcast); 
-            Debug.Log("IP " + GetIpAddress().ToArray().ToString());
+         
         }
         public static IEnumerable<IPAddress> GetIpAddress()
         {

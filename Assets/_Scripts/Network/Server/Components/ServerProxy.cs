@@ -18,14 +18,14 @@ namespace Community.Server.Components
     public class ServerProxy : MonoBehaviour 
     {
         public NetManager _netManager;
+     
         public  NetPacketProcessor _packetProcessor;
         public LogicTimer _logicTimer;
         private readonly NetDataWriter _cachedWriter = new NetDataWriter();
 
         public void StartServer(ServerInfoProxy info)
         {
-
-            ServerCallBlack.onStartedServer?.Invoke(_netManager);
+             
             info.config = new ServerConfig("Test_1");
             info.config.Load();
             if (_netManager.IsRunning)
@@ -65,9 +65,15 @@ namespace Community.Server.Components
         public NetDataWriter WritePacket<T>(T packet,NetDataWriter writer) where T : class, new()
         {
             if (writer.Length == 0)
-                return WritePacket(packet);
+            {
+                Debug.Log("[S] writer = 0");
+                writer = WritePacket(packet);
+            }
             else
-            _packetProcessor.Write(writer, packet);
+            {
+                Debug.Log("Writet != null");
+                _packetProcessor.Write(writer, packet);
+            }
             return writer;
         }
     } 

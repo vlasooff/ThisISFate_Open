@@ -17,21 +17,21 @@ namespace Community.Server
 {
     public delegate void OnCreatePlayer(Components.PlayerManager player, bool isNew);
    
-
+    [DisableAutoCreation]
     public class PlayersSystem : ComponentServer
     {
         ushort timeOut = 0; 
         private ServerProxy ServerData => ServerManager.manager.serverProxy;
         private PlayersInfoComponent playersData => ServerManager.manager.playersData;
         
-        protected override void onStartedServer(NetManager manager)
+        protected override void onStartedServer(NetPacketProcessor _packetProcessor)
         {
-            ServerData._packetProcessor.RegisterNestedType<CustomCharacter>();
-            ServerData._packetProcessor.RegisterNestedType<CharacterCustomHead>();
-            ServerData._packetProcessor.RegisterNestedType<CharacterCustomBody>();
-            ServerData._packetProcessor.SubscribeReusable<JoinPacket, NetPeer>(OnJoinReceived);
-            ServerData._packetProcessor.RegisterNestedType<UpdatePlayerPacket>();
-            ServerData._packetProcessor.RegisterNestedType<ItemWorld>();
+            _packetProcessor.RegisterNestedType<CustomCharacter>();
+            _packetProcessor.RegisterNestedType<CharacterCustomHead>();
+            _packetProcessor.RegisterNestedType<CharacterCustomBody>();
+            _packetProcessor.SubscribeReusable<JoinPacket, NetPeer>(OnJoinReceived);
+            _packetProcessor.RegisterNestedType<UpdatePlayerPacket>();
+            _packetProcessor.RegisterNestedType<ItemWorld>();
             SyncStateServer.onPlayerMsec += UpdatePlayersMsec;
             SyncStateServer.onPlayerSec += OnSyncForPlayer;
             CustomizeSystem.onCreateCharacter += ConnectionPlayer;
@@ -50,11 +50,13 @@ namespace Community.Server
         }
 
         private void OnResponseCreatePlayer(PlayerManager manager, NetDataWriter packet)
-        { 
-           WritePacket(SendServerInfo(manager),packet); //Отправка новому игроку данных сервера, игроков, и его данные 
+        {
+            Debug.Log("[S]OnResponseCreatePlayer");
+            manager.peer.Send(WritePacket(SendServerInfo(manager)), DeliveryMethod.ReliableOrdered);
+            //Отправка новому игроку данных сервера, игроков, и его данные 
         }
 
-        protected override void OnStartServer(NetManager manager)
+        protected override void OnStartServer(NetPacketProcessor _packetProcessor)
         {
             playersData.worldConfig = new WorldData(); 
             playersData.worldConfig.Load();

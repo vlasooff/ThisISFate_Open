@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Community.Other;
 using LiteNetLib;
+using LiteNetLib.Utils;
 using Unity.Entities;
 using UnityEngine;
 
@@ -13,10 +14,9 @@ namespace Community.Server.Systems
     public class ObjectSystem : ComponentServer
     {
        
-        protected override void onStartedServer(NetManager manager)
+        protected override void onStartedServer(NetPacketProcessor _packetProcessor )
         {
-            return;
-            base.onStartedServer(manager);
+            return; 
             WorldObjects objects =  SaveManager.LoadJSON<WorldObjects>($"{ServerManager.manager.serverInfoProxy.serverFolder}/WorldServer.dat");
             for (int i = 0; i < objects.objectServerWorlds.Length; i++)
             {

@@ -29,6 +29,6 @@ namespace Community.Server
     public delegate void OnDisconnectedPlayer(NetPeer peer, DisconnectInfo info);
     public delegate void OnShutdownServer();
     public delegate void OnUpdateState(NetDataWriter dataWriter);
-    public delegate void OnStartedServer(LiteNetLib.NetManager manager);
-    public delegate void OnStartServer(LiteNetLib.NetManager manager);
+    public delegate void OnStartedServer(NetPacketProcessor _packetProcessor);
+    public delegate void OnStartServer(NetPacketProcessor _packetProcessor);
 }
