@@ -1,4 +1,5 @@
-﻿using Community.Other;
+﻿using System;
+using Community.Other;
 using Community.Server.Components;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -12,8 +13,11 @@ namespace Community.Server.Systems
         EntitysManager entitysManager;
         protected override void onStartedServer(NetPacketProcessor _packetProcessor)
         {
-            entitysManager = ServerManager.manager.GetManager<EntitysManager>(EManagers.entitysnet);
+            entitysManager = ServerManager.manager.GetManager<EntitysManager>(EManagers.entitysnet); 
         }
+
+   
+
         protected override void onConnectedPlayer(NetPeer peer)
         {
             CreatePlayer(peer);
@@ -23,7 +27,8 @@ namespace Community.Server.Systems
             EntityPlayerManager entityPlayer = (EntityPlayerManager)peer.Tag;
             if (entityPlayer != null)
             {
-                entitysManager.entitys.Remove(entityPlayer);
+                SaveEntityData(entityPlayer.GetSave(),entityPlayer.username);
+                entitysManager.Remove(entityPlayer);
                 entityPlayer.DestroyEntity();
             }
             else Debug.LogError("[S] Player disconected, entity player not find");
@@ -42,21 +47,29 @@ namespace Community.Server.Systems
         private EntityPlayerManager CreatePlayer(NetPeer peer)
         {
             EntityPlayerManager entity = null;
-            entitysManager.entitys.Add(entity);
-            entity = new EntityPlayerManager((ushort)entitysManager.entitys.IndexOf(entity), EntityManager.CreateEntity(), peer);
+            entitysManager.Add(entity);
+            entity = new EntityPlayerManager( entitysManager.IndexOf(entity), EntityManager.CreateEntity(), peer);
 
             entity.peer.Tag = entity;
             EntityManager.AddComponentData(entity.entityWorld, new EntityNetID(entity.id));
             EntityManager.AddComponentData(entity.entityWorld, new EntityNetPlayer());
             Debug.Log("[S] Entity create player " + entity.id);
+            EntityData data =  LoadEntityData(entity.username);
+            if(data != null)
+            Spawn(entity,data.position,data.rot);
+            else
+            {
+                Spawn(entity, entitysManager.SpawnEntity.position, 0);
+
+            }
             return entity;
         }
 
         private EntityNetManager CreateEntity()
         {
             EntityNetManager player = null;
-            entitysManager.entitys.Add(player);
-            player = new EntityNetManager((ushort)entitysManager.entitys.IndexOf(player), EntityManager.CreateEntity());
+            entitysManager.Add(player);
+            player = new EntityNetManager((ushort)entitysManager.IndexOf(player), EntityManager.CreateEntity());
             EntityManager.AddComponentData(player.entityWorld, new EntityNetID(player.id));
 
             return player;
@@ -66,10 +79,25 @@ namespace Community.Server.Systems
         {
 
         }
-        private void LoadEntityData()
+        private EntityData LoadEntityData(string username)
         {
-            SaveManager.LoadJSON<AutchUser>($"{ServerManager.manager.serverInfoProxy.serverFolder}/Players/player_{username}/User_{username}.dat");
+           return  SaveManager.LoadJSON<EntityData>($"{ServerManager.manager.serverInfoProxy.serverFolder}/Players/player_{username}/player_{username}.dat");
         }
-        private void SaveEntityData() { }
+        private void SaveEntityData(EntityData data, string username)
+        {
+            SaveManager.CreateFolder($"{ServerManager.manager.serverInfoProxy.serverFolder}/Players/player_{username}/");
+            SaveManager.SaveJSON(data, $"{ServerManager.manager.serverInfoProxy.serverFolder}/Players/player_{username}/player_{username}.dat");
+        }
+    }
+    [System.Serializable]
+    public class EntityData
+    { 
+        public Vector3 position;
+        public float rot; 
+        public EntityData(Vector3 vector3,float rotation)
+        {
+            position = vector3;
+            rot = rotation;
+        }
     }
 }

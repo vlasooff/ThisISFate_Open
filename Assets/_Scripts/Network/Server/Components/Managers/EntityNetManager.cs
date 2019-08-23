@@ -1,4 +1,5 @@
-﻿using LiteNetLib;
+﻿using Community.Server.Systems;
+using LiteNetLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,10 @@ namespace Community.Server.Components
         {
             entityWorld = entity;
             id = idEntity;
+        }
+        public   virtual EntityData GetSave()
+        {
+            return new EntityData(transform.position, transform.rotation.y);
         }
         public virtual void DestroyEntity()
         {

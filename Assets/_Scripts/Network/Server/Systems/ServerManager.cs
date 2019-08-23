@@ -22,12 +22,12 @@ namespace Community.Server
         public PlayersInfoComponent playersData;
         public RegionsComponent regionsComponent; 
         public static ServerManager manager;
-        private IManager[] managers = new IManager[1] { new EntitysManager() };
+        private IManager[] managers = new IManager[1];
 
         private void Awake()
         {
-
- 
+            managers[0] = GetComponentInChildren<EntitysManager>();
+            if (managers[0] == null) Debug.LogError("EROR");
             manager = this; 
 
              DontDestroyOnLoad(this);

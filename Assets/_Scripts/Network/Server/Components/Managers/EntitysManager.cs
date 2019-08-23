@@ -9,6 +9,28 @@ namespace Community.Server.Components
 {
     public class EntitysManager : MonoBehaviour, IManager
     {
-        public List<EntityNetManager> entitys = new List<EntityNetManager>();
+        public Transform SpawnEntity;
+        private List<EntityNetManager> entitys = new List<EntityNetManager>();
+
+        public EntityNetManager GetEntity(ushort id)
+        {
+            return entitys[id];
+        }
+        public EntityPlayerManager GetEntityPlayer(ushort id)
+        {
+            return (EntityPlayerManager)entitys[id];
+        }
+        public void Add(EntityNetManager manager)
+        {
+            entitys.Add(manager);
+        }
+        public void Remove(EntityNetManager manager)
+        {
+            entitys.Remove(manager);
+        }
+        public ushort IndexOf(EntityNetManager manager)
+        {
+            return (ushort)entitys.IndexOf(manager);
+        }
     }
 }

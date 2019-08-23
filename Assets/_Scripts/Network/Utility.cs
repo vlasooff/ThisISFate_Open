@@ -2,27 +2,16 @@
 using Community.Other;
 using Community.Server;
 using Community.Server.Components;
-using LiteNetLib;
 using LiteNetLib.Utils;
 using Network.All;
-using Network.Core;
-using Network.Core.Attributes;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.WebSockets;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Network
-{ 
+{
     public class Utility : MonoBehaviour
     {
         private bool isSnow = false;
@@ -30,14 +19,14 @@ namespace Network
         [SerializeField]
         private bool isHost = false;
         public ushort[] ids;
-        public ServerInfoProxy info; 
+        public ServerInfoProxy info;
         string command = "localhost";
         public string test = "Vitaxa sADddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddaaaaaaaadadadadadadadadada";
-        public  struct Test
+        public struct Test
         {
             public byte[] bytes;
 
-           
+
         }
         [EasyButtons.Button]
         public void TestComp()
@@ -46,16 +35,26 @@ namespace Network
             writer.Put(new Color(25, 25, 25));
             writer.Put(new Color(21, 12, 13));
             byte[] compression = CompManager.Compress(writer.Data);
-       
-            byte[]  text = CompManager.Decompress(compression);
+
+            byte[] text = CompManager.Decompress(compression);
             NetDataReader reader = new NetDataReader(text);
-            Debug.Log(writer.Length  + " = Comp: " + compression.Length);
+            Debug.Log(writer.Length + " = Comp: " + compression.Length);
             Debug.Log("Test: " + reader.GetColor()); Debug.Log("Test: " + reader.GetColor());
         }
         [EasyButtons.Button]
         public void Test2()
+        { 
+        }
+
+        private TestJson LoadEntityData(string username)
         {
-         
+            return SaveManager.LoadJSON<TestJson>($"Servers/Server_test/Players/player_{username}/player_{username}.dat");
+        }
+        private void SaveEntityData(TestJson data, string username)
+        {
+
+            SaveManager.CreateFolder($"Servers/Server_test/Players/player_{username}/");
+            SaveManager.SaveJSON(data, $"Servers/Server_test/Players/player_{username}/player_{username}.dat");
         }
         public static IEnumerable<IPAddress> GetIpAddress()
         {
@@ -64,7 +63,7 @@ namespace Network
         }
         private void Update()
         {
-          
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (isSnow) isSnow = false;
@@ -75,10 +74,10 @@ namespace Network
         {
             return Dns.GetHostAddresses(Dns.GetHostName()).Where(address =>
             address.AddressFamily == AddressFamily.InterNetwork).First();
-        }  
+        }
         public void OnGUI()
         {
-            if(isSnow)
+            if (isSnow)
             {
                 GUILayout.BeginVertical();
                 if (GUILayout.Button("Exit"))
@@ -90,18 +89,18 @@ namespace Network
             if (!ClientCallBlack.isConnected)
             {
                 GUILayout.BeginHorizontal();
-                  GUILayout.Label("Commands line", GUILayout.Width(380));
+                GUILayout.Label("Commands line", GUILayout.Width(380));
                 command = GUILayout.TextField(command);
                 if (GUILayout.Button("Connect"))
                 {
                     ClientManager.manager.clientData.Connect(command);
                 }
-                if (isHost) 
-                if (GUILayout.Button("Host"))
-                {
-                    ServerManager.manager.serverProxy.StartServer(info);
-                }
-             
+                if (isHost)
+                    if (GUILayout.Button("Host"))
+                    {
+                        ServerManager.manager.serverProxy.StartServer(info);
+                    }
+
                 GUILayout.EndHorizontal();
             }
 
@@ -114,6 +113,6 @@ namespace Network
 
         public ushort port;
 
-        
+
     }
 }
