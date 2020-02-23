@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace LiteNetLib.Utils
 {
-    public delegate void SubscribeDelegate(NetDataReader reader, object userData);
-    public delegate void SubscribeJobDelegate(NetJobReader reader, object userData);
     public class NetPacketProcessor
-    { 
+    {
+        protected delegate void SubscribeDelegate(NetDataReader reader, object userData);
         private readonly Dictionary<string, ulong> _hashCache = new Dictionary<string, ulong>();
         private readonly char[] _hashBuffer = new char[1024];
         private readonly NetSerializer _netSerializer;
@@ -60,10 +59,10 @@ namespace LiteNetLib.Utils
         }
 
         /// <summary>
-        /// Зарегистрировать вложенный тип недвижимости
+        /// Register nested property type
         /// </summary>
         /// <typeparam name="T">INetSerializable structure</typeparam>
-        /// <returns>True - если регистрация прошла успешно, false - если тип уже зарегистрирован</returns>
+        /// <returns>True - if register successful, false - if type already registered</returns>
         public bool RegisterNestedType<T>() where T : struct, INetSerializable
         {
             return _netSerializer.RegisterNestedType<T>();
@@ -228,8 +227,8 @@ namespace LiteNetLib.Utils
         }
 
         /// <summary>
-        ///  Зарегистрируйтесь и подпишитесь на событие получения пакета
-        /// Этот метод перезапишет последний полученный класс пакета при получении (меньше мусора)
+        /// Register and subscribe to packet receive event
+        /// This metod will overwrite last received packet class on receive (less garbage)
         /// </summary>
         /// <param name="onReceive">event that will be called when packet deserialized with ReadPacket method</param>
         /// <exception cref="InvalidTypeException"><typeparamref name="T"/>'s fields are not supported, or it has no fields</exception>
@@ -245,8 +244,8 @@ namespace LiteNetLib.Utils
         }
 
         /// <summary>
-        /// /// Зарегистрируйтесь и подпишитесь на событие получения пакета
-        /// Этот метод перезапишет последний полученный класс пакета при получении (меньше мусора)
+        /// Register and subscribe to packet receive event
+        /// This metod will overwrite last received packet class on receive (less garbage)
         /// </summary>
         /// <param name="onReceive">event that will be called when packet deserialized with ReadPacket method</param>
         /// <exception cref="InvalidTypeException"><typeparamref name="T"/>'s fields are not supported, or it has no fields</exception>

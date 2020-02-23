@@ -29,10 +29,10 @@ namespace Community.Server.Components
     [System.Serializable]
     public struct EntityName : IComponentData
     {
-        public readonly NativeString64 username;
+        public readonly string username;
         public EntityName(string user )
         {
-            username = new NativeString64(user);
+            username =  user;
         }
     }
     public struct EntityNetPlayer : IComponentData

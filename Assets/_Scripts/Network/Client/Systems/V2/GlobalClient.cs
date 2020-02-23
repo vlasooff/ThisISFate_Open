@@ -8,7 +8,7 @@ using Network.Core;
 using Network.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Net;        
 using System.Net.Sockets;
 using UnityEngine;
 
@@ -17,7 +17,7 @@ namespace Community.Client
     public class GlobalClient : ComponentClient, INetEventListener
     {
         private ushort m_lastServerTick;
-        private ServerState m_cachedServerState;
+        private ServerState m_cachedServerState;    
         private ClientData m_dataClient;
         private bool m_isRunClient = false;
 

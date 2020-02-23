@@ -685,7 +685,7 @@ namespace LiteNetLib.Utils
                     result = GetBytesWithLength();
                     return true;
                 }
-            }
+            } 
             result = null;
             return false;
         }
@@ -699,4 +699,3 @@ namespace LiteNetLib.Utils
         }
     }
 }
-

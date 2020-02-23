@@ -11,17 +11,21 @@ using UnityEngine;
 namespace Community.Server.Components 
 {
     [System.Serializable]
-    public class EntityNetManager 
+    public class EntityNetManager
     {
+        public string username;
         public readonly Entity entityWorld;
         public readonly ushort id;
         public CharacterController controller;
         public PlayerInventory playerInventory;
         public Transform transform;
-        public EntityNetManager(ushort idEntity,Entity entity )
+        public bool isFixed = false;
+
+        public EntityNetManager(ushort idEntity,Entity entity  )
         {
             entityWorld = entity;
             id = idEntity;
+            playerInventory = new PlayerInventory();
         }
         public   virtual EntityData GetSave()
         {

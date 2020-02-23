@@ -1,57 +1,146 @@
 fileFormatVersion: 2
 guid: 6ce4b49feccbbcc4f86d8f0ba287013d
-timeCreated: 1550328465
-licenseType: Free
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: Left_Arm
-    100004: Left_Foot
-    100006: Left_Hand
-    100008: Left_Hip
-    100010: Left_Hook
-    100012: Left_Leg
-    100014: Left_Shoulder
-    100016: Model
-    100018: Right_Arm
-    100020: Right_Foot
-    100022: Right_Hand
-    100024: Right_Hip
-    100026: Right_Hook
-    100028: Right_Leg
-    100030: Right_Shoulder
-    100032: Skeleton
-    100034: Skull
-    100036: Spine
-    400000: //RootNode
-    400002: Left_Arm
-    400004: Left_Foot
-    400006: Left_Hand
-    400008: Left_Hip
-    400010: Left_Hook
-    400012: Left_Leg
-    400014: Left_Shoulder
-    400016: Model
-    400018: Right_Arm
-    400020: Right_Foot
-    400022: Right_Hand
-    400024: Right_Hip
-    400026: Right_Hook
-    400028: Right_Leg
-    400030: Right_Shoulder
-    400032: Skeleton
-    400034: Skull
-    400036: Spine
-    2100000: Material__Texture_png
-    4300000: Model
-    7400000: Default Take
-    7400002: Pose
-    9500000: //RootNode
-    13700000: Model
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Left_Arm
+  - first:
+      1: 100004
+    second: Left_Foot
+  - first:
+      1: 100006
+    second: Left_Hand
+  - first:
+      1: 100008
+    second: Left_Hip
+  - first:
+      1: 100010
+    second: Left_Hook
+  - first:
+      1: 100012
+    second: Left_Leg
+  - first:
+      1: 100014
+    second: Left_Shoulder
+  - first:
+      1: 100016
+    second: Model
+  - first:
+      1: 100018
+    second: Right_Arm
+  - first:
+      1: 100020
+    second: Right_Foot
+  - first:
+      1: 100022
+    second: Right_Hand
+  - first:
+      1: 100024
+    second: Right_Hip
+  - first:
+      1: 100026
+    second: Right_Hook
+  - first:
+      1: 100028
+    second: Right_Leg
+  - first:
+      1: 100030
+    second: Right_Shoulder
+  - first:
+      1: 100032
+    second: Skeleton
+  - first:
+      1: 100034
+    second: Skull
+  - first:
+      1: 100036
+    second: Spine
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Left_Arm
+  - first:
+      4: 400004
+    second: Left_Foot
+  - first:
+      4: 400006
+    second: Left_Hand
+  - first:
+      4: 400008
+    second: Left_Hip
+  - first:
+      4: 400010
+    second: Left_Hook
+  - first:
+      4: 400012
+    second: Left_Leg
+  - first:
+      4: 400014
+    second: Left_Shoulder
+  - first:
+      4: 400016
+    second: Model
+  - first:
+      4: 400018
+    second: Right_Arm
+  - first:
+      4: 400020
+    second: Right_Foot
+  - first:
+      4: 400022
+    second: Right_Hand
+  - first:
+      4: 400024
+    second: Right_Hip
+  - first:
+      4: 400026
+    second: Right_Hook
+  - first:
+      4: 400028
+    second: Right_Leg
+  - first:
+      4: 400030
+    second: Right_Shoulder
+  - first:
+      4: 400032
+    second: Skeleton
+  - first:
+      4: 400034
+    second: Skull
+  - first:
+      4: 400036
+    second: Spine
+  - first:
+      21: 2100000
+    second: Material__Texture_png
+  - first:
+      43: 4300000
+    second: Model
+  - first:
+      74: 7400000
+    second: Default Take
+  - first:
+      74: 7400002
+    second: Pose
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: Model
+  - first:
+      74: -623603649343465320
+    second: Scene
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -68,6 +157,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -82,6 +172,8 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -89,10 +181,13 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
@@ -104,10 +199,13 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -117,14 +215,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

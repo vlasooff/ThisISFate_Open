@@ -9,9 +9,11 @@ using UnityEngine;
 
 namespace Community.Server.Systems
 {
-    [DisableAutoCreation]
+    public delegate void OnAutchPeer(EntityPlayerManager player);
+
     public class AutchSystem : ComponentServer
     {
+        public static OnAutchPeer onAutchPeer;
         private EntitysManager EntitysManager;
         private ServerProxy ServerData => ServerManager.manager.serverProxy;
         protected override void onStartedServer(NetPacketProcessor _packetProcessor)
@@ -30,6 +32,11 @@ namespace Community.Server.Systems
                 if (entityPlayer != null)
                 {
                     entityPlayer.username = packet.UserName;
+
+                    EntityManager.AddComponentData(entityPlayer.entityWorld, new EntityName(entityPlayer.username));
+                    EntityManager.AddComponentData(entityPlayer.entityWorld, new EntitySteamID(packet.steamid));
+                    EntityManager.SetName(entityPlayer.entityWorld, "Player_" + packet.UserName);
+                  
                 }
                 else Debug.LogError("[S] Entity player null for set name");
                 AutchUser user = LoadInfoEntity(packet.UserName);

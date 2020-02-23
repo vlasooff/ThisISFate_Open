@@ -28,22 +28,22 @@ namespace LiteNetLib
     }
 
     /// <summary>
-    /// Дополнительная информация об отключении
+    /// Additional information about disconnection
     /// </summary>
     public struct DisconnectInfo
     {
         /// <summary>
-        /// Дополнительная информация, почему peer отключен
+        /// Additional info why peer disconnected
         /// </summary>
         public DisconnectReason Reason;
 
         /// <summary>
-        /// Код ошибки (если причиной является SocketSendError или SocketReceiveError)
+        /// Error code (if reason is SocketSendError or SocketReceiveError)
         /// </summary>
         public SocketError SocketErrorCode;
 
         /// <summary>
-        /// Дополнительные данные, к которым можно получить доступ (только если причиной является RemoteConnectionClose)
+        /// Additional data that can be accessed (only if reason is RemoteConnectionClose)
         /// </summary>
         public NetPacketReader AdditionalData;
     }

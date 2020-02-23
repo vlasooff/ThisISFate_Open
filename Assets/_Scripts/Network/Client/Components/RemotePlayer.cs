@@ -43,11 +43,11 @@ namespace Community.Client.Components
     public struct PlayerInfo : IComponentData
     { 
         public readonly ulong SteamID;
-        public NativeString64 username;
+        public string username;
         public PlayerInfo(ulong steamid, string name)
         { 
             SteamID = steamid;
-            username = new NativeString64(name);
+            username =  name ;
         }
     } 
     [System.Serializable]

@@ -193,6 +193,7 @@ namespace Community.Core
         public ushort ServerTick { get; set; }
         public UpdatePlayerPacket[] updatePlayers { get; set; }
     }
+    [System.Serializable]
     public struct UpdatePlayerPacket : INetSerializable
     {
         public ushort Id { get; set; }

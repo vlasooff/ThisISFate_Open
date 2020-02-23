@@ -11,12 +11,12 @@ namespace Community.Server.Systems
         private ItemsWorldComponent ItemsGlobal;
         private ServerProxy ServerData => ServerManager.manager.serverProxy;
 
-        protected override void onStartedServer(NetPacketProcessor _packetProcessor)
+        protected override void OnStartServer(NetPacketProcessor _packetProcessor)
         {
-            ItemsGlobal = ServerManager.manager.GetComponent<ItemsWorldComponent>();
-            SyncStateServer.OnCreatedPlayerResponse += OnConnectedToServer;
+        ItemsGlobal = ServerManager.manager.GetManager<ItemsWorldComponent>(EManagers.ItemsWorld); 
             SyncStateServer.onUpdateSec += OnForPlayerSec; 
             ServerData._packetProcessor.SubscribeReusable<CommandAddItem, NetPeer>(OnAddItemInventory);
+            _packetProcessor.RegisterNestedType<ItemWorld>();
         }
 
         private void OnForPlayerSec(NetDataWriter packet)
@@ -24,19 +24,18 @@ namespace Community.Server.Systems
             
         }
 
-        private void OnConnectedToServer(PlayerManager manager, NetDataWriter writer)
+        protected override void onConnectedPlayer(NetPeer peer)
         {
-            manager.peer.Send(WritePacket(new WorldItemsPacket() { items = ItemsGlobal.itemWorlds.ToArray() }), DeliveryMethod.ReliableOrdered);
-            Debug.Log("[S] OnConnectedToServer");
-     
-
+             
+            peer.Send(WritePacket(new WorldItemsPacket() { items = ItemsGlobal.itemWorlds.ToArray() }), DeliveryMethod.ReliableOrdered);
+            Debug.Log("[S] Send items world");
         }
         #region ItemWorld
         private void SpawnWorldItem(ushort id, Vector3 position, byte rotY)
         {
             ItemWorld item = new ItemWorld(ItemsGlobal.itemWorlds.Count + 1, id, position, rotY);
             ItemsGlobal.itemWorlds.Add(item);
-            item.Index = ItemsGlobal.itemWorlds.IndexOf(item);
+            
             ServerData._netManager.SendToAll(WritePacket(new SpawnItemWorldPacket() { index = (ushort)item.Index, id = id , position = position,rotY = rotY}), DeliveryMethod.ReliableOrdered);
         }
         private void RemoveWorldItem(ushort index)
@@ -51,15 +50,21 @@ namespace Community.Server.Systems
             ItemWorld itemWorld = ItemsGlobal.itemWorlds[command.index];
             if (itemWorld.Index == command.index)
             {
-                AddItemInInventory((PlayerManager)peer.Tag, itemWorld.Id);
+                AddItemInInventory((EntityPlayerManager)peer.Tag, itemWorld.Id);
                 RemoveWorldItem((ushort)command.index);
             }
             else Debug.LogError("[S] ONADDITEM Index != null");
         }
-        private void AddItemInInventory(PlayerManager manager, ushort id)
+        private void AddItemInInventory(EntityPlayerManager manager, ushort id)
         {
+            if (manager.playerInventory == null) Debug.Log("Player == null");
             PacketItems packet = manager.playerInventory.GetMinItems();
-            WritePacket(new ResponseAddItem(packet.index, id), manager.hash_response_sec);
+            if(packet == null)
+            {
+                
+            }
+            manager.peer.Send(WritePacket(new ResponseAddItem(packet.index, id)), DeliveryMethod.ReliableOrdered);
+        
         }
 
         protected override void OnUpdate()

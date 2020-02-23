@@ -105,7 +105,7 @@ namespace LiteNetLib.Utils
         {
             get { return _position; }
         }
-        //มๅ็ Alpha
+        //รรฅรง Alpha
         public void Put(Color qua)
         {
             Put(qua.r);

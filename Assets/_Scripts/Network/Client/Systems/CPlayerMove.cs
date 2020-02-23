@@ -114,7 +114,7 @@ namespace Component.Client.Systems
             transform.localRotation = Quaternion.Euler(0, packet.Rotation, 0);
             if (moving)
             {
-                motor.movingDir *= client._speed * Time.deltaTime;
+                motor.movingDir *= client._speed * Time.DeltaTime;
             }
             client.controller.Move(motor.movingDir);
             // done 
@@ -130,12 +130,12 @@ namespace Component.Client.Systems
             Vector2 deltaPosition = new Vector2(dx, dy);
 
             // Low-pass filter the deltaMove
-            float smooth = Mathf.Min(1.0f, Time.deltaTime / 0.15f);
+            float smooth = Mathf.Min(1.0f, Time.DeltaTime / 0.15f);
             player.smoothDeltaPosition = Vector2.Lerp(player.smoothDeltaPosition, deltaPosition, smooth);
 
             // Update velocity if time advances
-            if (Time.deltaTime > 1e-5f)
-                player.velocity = player.smoothDeltaPosition / Time.deltaTime;
+            if (Time.DeltaTime > 1e-5f)
+                player.velocity = player.smoothDeltaPosition / Time.DeltaTime;
 
             // bool shouldMove = player.player.velocity.magnitude > 0.5f && 0.2f > 0.2f;
 

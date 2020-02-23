@@ -12,12 +12,12 @@ namespace Community.Server.Components
 {
     public class EntityPlayerManager : EntityNetManager
     {
-        public string username;
         public readonly NetPeer peer;
-        public EntityPlayerManager(ushort id,Entity entity, NetPeer netPeer) : base(  id,entity )
+        public EntityPlayerManager(ushort id,Entity entity, NetPeer netPeer) : base(  id,entity)
         {
             peer = netPeer;
         }
+     
         public SpawnCurrentPlayer GetSpawnCurrentPlayer()
         {
             SpawnCurrentPlayer currentPlayer = new SpawnCurrentPlayer();

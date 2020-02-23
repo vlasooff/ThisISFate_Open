@@ -22,14 +22,16 @@ namespace Community.Server
         public PlayersInfoComponent playersData;
         public RegionsComponent regionsComponent; 
         public static ServerManager manager;
-        private IManager[] managers = new IManager[1];
-
+        private IManager[] managers = new IManager[2];
+        public static Entity EntityServer;
         private void Awake()
         {
             managers[0] = GetComponentInChildren<EntitysManager>();
+            managers[1] = GetComponentInChildren<ItemsWorldComponent>();
             if (managers[0] == null) Debug.LogError("EROR");
-            manager = this; 
-
+            manager = this;
+            EntityServer =  World.Active.EntityManager.CreateEntity();
+            AddManagers();
              DontDestroyOnLoad(this);
             if (!serverProxy) Debug.Log("[S] ServerManager " +
                 "null!");
@@ -39,12 +41,21 @@ namespace Community.Server
 
             return (T)managers[(int)id];
 
+
+        }
+        private void AddManagers()
+        {
+           // AddComponent(new ItemsWorldComponent() { itemWorlds = new Unity.Collections.NativeList<Core.ItemWorld>(Unity.Collections.Allocator.None) }); ;
+        }
+        public static void AddComponent<T>(T data) where T :struct, IComponentData
+        {
+            World.Active.EntityManager.AddComponentData(EntityServer, data);
         }
      
     }
     public enum EManagers : int
     {
-        entitysnet,server
+        entitysnet,ItemsWorld
     }
     public interface IManager
     {

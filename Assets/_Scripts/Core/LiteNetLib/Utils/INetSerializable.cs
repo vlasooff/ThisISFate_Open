@@ -2,7 +2,7 @@
 {
     public interface INetSerializable
     {
-        void Deserialize(NetDataReader reader);
         void Serialize(NetDataWriter writer);
+        void Deserialize(NetDataReader reader);
     }
 }

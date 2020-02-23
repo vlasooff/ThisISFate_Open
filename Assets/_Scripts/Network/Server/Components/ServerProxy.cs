@@ -25,14 +25,13 @@ namespace Community.Server.Components
 
         public void StartServer(ServerInfoProxy info)
         {
-             
+            ServerCallBlack.onStartedServer?.Invoke(_packetProcessor);
             info.config = new ServerConfig("Test_1");
             info.config.Load();
             if (_netManager.IsRunning)
                 return;
             _netManager.SimulateLatency = info.SimulateLatency;
             _netManager.SimulatePacketLoss = info.SimulatePacketLoss; 
-            _netManager.MergeEnabled = true;
             _netManager.NatPunchEnabled = true;
             _netManager.Start(info.config.port);
 

@@ -32,7 +32,7 @@ namespace Community.Client.Components
         }
         public RPlayerManager(PlayerData packet)
         {
-            baseData = new PlayerBase(packet.username, packet.steamid, packet.Id);
+            baseData = new PlayerBase(packet.username.ToString(), packet.steamid, packet.Id);
         }
 
         public bool IsSpawn;

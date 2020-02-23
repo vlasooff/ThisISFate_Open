@@ -15,6 +15,8 @@ namespace Community.Server.Components
         public ItemInventory[] slotsHand = new ItemInventory[0];
         public ushort AllMassa = 0;
  
+
+     
         public void AddNewPackets(PacketItems packet, EBodyIndex bodyIndex)
         {
             itemPackets[(int)bodyIndex] = packet;
@@ -25,12 +27,13 @@ namespace Community.Server.Components
         }
         public PacketItems GetMinItems()
         {
-            PacketItems packet = itemPackets[0];
+            PacketItems packet = null;
             for (int i = 0; i < itemPackets.Length; i++)
             {
                 if (packet.massaPacket < itemPackets[i].massaPacket) packet = itemPackets[i];
 
             }
+            
             return packet;
         }
         public RemoteCustomPlayer GetCharacterBody()

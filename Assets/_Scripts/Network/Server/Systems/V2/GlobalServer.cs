@@ -1,6 +1,7 @@
 ﻿using Community.Core;
 using Community.Core.Serializables;
-using Community.Server.Components; 
+using Community.Server.Components;
+using Community.Server.Systems;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Network.Core;
@@ -62,6 +63,7 @@ namespace Community.Server
                 message.Add(Msg);
                 message.Add(MsgSerialized);
                 message.Add(MsgEvent);
+                
                 return true;
             }
             catch (System.Exception ex)

@@ -15,7 +15,7 @@ using System;
 
 namespace Community.Server
 {
-    public delegate void OnCreatePlayer(Components.PlayerManager player, bool isNew);
+    public delegate void OnCreatePlayer(Components.EntityPlayerManager player, bool isNew);
    
     [DisableAutoCreation]
     public class PlayersSystem : ComponentServer
@@ -34,7 +34,7 @@ namespace Community.Server
             _packetProcessor.RegisterNestedType<ItemWorld>();
             SyncStateServer.onPlayerMsec += UpdatePlayersMsec;
             SyncStateServer.onPlayerSec += OnSyncForPlayer;
-            CustomizeSystem.onCreateCharacter += ConnectionPlayer;
+           // CustomizeSystem.onCreateCharacter += ConnectionPlayer;
             ServerCallBlack.onDisconnectedPlayer += RemovePlayer;
             SyncStateServer.OnCreatedPlayerResponse += OnResponseCreatePlayer;
             playersData.worldConfig = new WorldData();
@@ -49,10 +49,10 @@ namespace Community.Server
             }
         }
 
-        private void OnResponseCreatePlayer(PlayerManager manager, NetDataWriter packet)
+        private void OnResponseCreatePlayer(EntityPlayerManager manager, NetDataWriter packet)
         {
             Debug.Log("[S]OnResponseCreatePlayer");
-            manager.peer.Send(WritePacket(SendServerInfo(manager)), DeliveryMethod.ReliableOrdered);
+          //  manager.peer.Send(WritePacket(SendServerInfo(manager)), DeliveryMethod.ReliableOrdered);
             //Отправка новому игроку данных сервера, игроков, и его данные 
         }
 
@@ -102,7 +102,7 @@ namespace Community.Server
                     playersData.players.Add(playerServer.id, playerServer); 
                     playerServer.SpawnLoadInfo();
                     LogDev($"[S] Add  player " + playerServer.id);
-                    ServerCallBlack.onCreatePlayer?.Invoke(playerServer, false);
+                   // ServerCallBlack.onCreatePlayer?.Invoke(playerServer, false);
                 }
                 else
                 {
@@ -111,7 +111,7 @@ namespace Community.Server
                     playersData.players.Add(playerServer.id, playerServer);
                     playerServer.Spawn(new Vector3(1685, 25, 911));
                     LogDev($"[S] Add new player " + playerServer.id);
-                    ServerCallBlack.onCreatePlayer?.Invoke(playerServer,true);
+                 //   ServerCallBlack.onCreatePlayer?.Invoke(playerServer,true);
                    
                 } 
                  ServerData._netManager.SendToAll(WritePacket(playerServer.GetJoinedPacket()), DeliveryMethod.ReliableOrdered,playerServer.peer);//Отправка базовых данных
@@ -168,7 +168,7 @@ namespace Community.Server
             { 
                 if (playerID.id != playerServer.id)
                 {
-                    playerDatas.Add(new PlayerData() { Id = playerID.id, steamid = playerID.SteamID, username = playerID.username.ToString() }); 
+                    playerDatas.Add(new PlayerData() { Id = playerID.id, steamid = playerID.SteamID, username = new NativeString64(playerID.username.ToString()) }) ; 
                 }
             });
           

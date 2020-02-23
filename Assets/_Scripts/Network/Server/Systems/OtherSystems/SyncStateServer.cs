@@ -9,7 +9,7 @@ using System;
 
 namespace Community.Server.Systems
 {
-    public delegate void OnPeerResponse(PlayerManager manager,NetDataWriter packet);
+    public delegate void OnPeerResponse(EntityPlayerManager manager,NetDataWriter packet);
     public delegate void OnUpdateState(NetDataWriter packet);
     public delegate void OnUpdateForPlayer(); 
     public class SyncStateServer : ComponentServer
@@ -31,14 +31,12 @@ namespace Community.Server.Systems
 
         protected override void OnStartServer(NetPacketProcessor _packetProcessor )
         { 
-            m_proxy = ServerManager.manager.serverProxy;
-            ServerCallBlack.onConnectedPlayer += OnConnectedResponse;
-            ServerCallBlack.onDisconnectedPlayer += OnDConnectedResponse;
+            m_proxy = ServerManager.manager.serverProxy; 
             ServerCallBlack.onCreatePlayer += OnPlayerCreated;
         }
 
         NetDataWriter hash_spawnPlayer= new NetDataWriter();
-        private void OnPlayerCreated(PlayerManager player, bool isNew)
+        private void OnPlayerCreated(EntityPlayerManager player, bool isNew)
         {
             if (player != null)
             {
@@ -53,9 +51,11 @@ namespace Community.Server.Systems
             else Debug.LogError("[S] OnCreate Event not called");
         }
 
-        private void OnDConnectedResponse(NetPeer peer, DisconnectInfo info)
+
+        protected override void OnDisconectedPlayer(NetPeer peer, DisconnectInfo info)
         {
-            PlayerManager player = (PlayerManager)peer.Tag;
+         
+            EntityPlayerManager player = (EntityPlayerManager)peer.Tag;
             if (player != null)
             {
                 NetDataWriter writer = new NetDataWriter();
@@ -66,9 +66,9 @@ namespace Community.Server.Systems
             else Debug.LogError("[S] OnDesConnect Event not called");
         }
 
-        private void OnConnectedResponse(NetPeer peer)
+        protected override void onConnectedPlayer(NetPeer peer)
         {
-            PlayerManager player = (PlayerManager)peer.Tag;
+            EntityPlayerManager player = (EntityPlayerManager)peer.Tag;
             if (player != null)
             {
                 NetDataWriter writer = new NetDataWriter();

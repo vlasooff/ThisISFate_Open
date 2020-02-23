@@ -10,19 +10,32 @@ namespace Community.Server.Components
     public class EntitysManager : MonoBehaviour, IManager
     {
         public Transform SpawnEntity;
+        [SerializeField]
         private List<EntityNetManager> entitys = new List<EntityNetManager>();
 
         public EntityNetManager GetEntity(ushort id)
         {
-            return entitys[id];
+            
+            if (entitys.ElementAt(id) != null) return entitys.ElementAt(id);
+            else Debug.LogError("[S] Enitity  not find " + id);
+            return null;
         }
         public EntityPlayerManager GetEntityPlayer(ushort id)
         {
-            return (EntityPlayerManager)entitys[id];
+            return (EntityPlayerManager)GetEntity(id);
         }
         public void Add(EntityNetManager manager)
         {
             entitys.Add(manager);
+        }
+        public void SetIndex(EntityNetManager manager)
+        {
+            entitys[manager.id] = manager;
+        }
+        public ushort AddAndID(EntityNetManager manager)
+        {
+            entitys.Add(manager);
+            return (ushort)entitys.IndexOf(manager);
         }
         public void Remove(EntityNetManager manager)
         {

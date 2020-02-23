@@ -154,7 +154,7 @@ namespace LiteNetLib
         public bool SimulatePacketLoss = false;
 
         /// <summary>
-        ///Смоделируйте задержку, удерживая пакеты на случайное время. (Работает только в режиме отладки)
+        /// Simulate latency by holding packets for random time. (Works only in DEBUG mode)
         /// </summary>
         public bool SimulateLatency = false;
 
@@ -174,19 +174,14 @@ namespace LiteNetLib
         public int SimulationMaxLatency = 100;
 
         /// <summary>
-        ///Экспериментальная особенность. События будут автоматически вызываться без использования метода PollEvents из другого потока.
+        /// Experimental feature. Events automatically will be called without PollEvents method from another thread
         /// </summary>
         public bool UnsyncedEvents = false;
 
         /// <summary>
-        /// Позволяет получать запросы на обнаружение
+        /// Allows receive DiscoveryRequests
         /// </summary>
         public bool DiscoveryEnabled = false;
-
-        /// <summary>
-        ///Перед отправкой объединяйте небольшие пакеты в один, чтобы уменьшить количество исходящих пакетов. (Может немного увеличить размер исходящих данных)
-        /// </summary>
-        public bool MergeEnabled = false;
 
         /// <summary>
         /// Delay betwen initial connection attempts
@@ -199,7 +194,7 @@ namespace LiteNetLib
         public int MaxConnectAttempts = 10;
 
         /// <summary>
-        /// Включает опцию сокета "ReuseAddress" для определенных целей
+        /// Enables socket option "ReuseAddress" for specific purposes
         /// </summary>
         public bool ReuseAddress = false;
 
@@ -227,7 +222,7 @@ namespace LiteNetLib
         public int LocalPort { get { return _socket.LocalPort; } }
 
         /// <summary>
-        /// Автоматически перезаписываем NetPacketReader после события OnReceive
+        /// Automatically recycle NetPacketReader after OnReceive event
         /// </summary>
         public bool AutoRecycle;
 
@@ -340,49 +335,48 @@ namespace LiteNetLib
             CreateEvent(NetEvent.EType.ConnectionLatencyUpdated, fromPeer, latency: latency);
         }
 
-        internal bool SendRawAndRecycle(NetPacket packet, IPEndPoint remoteEndPoint)
+        internal int SendRawAndRecycle(NetPacket packet, IPEndPoint remoteEndPoint)
         {
             var result = SendRaw(packet.RawData, 0, packet.Size, remoteEndPoint);
             NetPacketPool.Recycle(packet);
             return result;
         }
 
-        internal bool SendRaw(NetPacket packet, IPEndPoint remoteEndPoint)
+        internal int SendRaw(NetPacket packet, IPEndPoint remoteEndPoint)
         {
             return SendRaw(packet.RawData, 0, packet.Size, remoteEndPoint);
         }
 
-        internal bool SendRaw(byte[] message, int start, int length, IPEndPoint remoteEndPoint)
+        internal int SendRaw(byte[] message, int start, int length, IPEndPoint remoteEndPoint)
         {
             if (!IsRunning)
-                return false;
+                return 0;
 
             SocketError errorCode = 0;
-            if (_socket.SendTo(message, start, length, remoteEndPoint, ref errorCode) <= 0)
-                return false;
-
+            int result = _socket.SendTo(message, start, length, remoteEndPoint, ref errorCode);
             NetPeer fromPeer;
             switch (errorCode)
             {
                 case SocketError.MessageSize:
                     NetDebug.Write(NetLogLevel.Trace, "[SRD] 10040, datalen: {0}", length);
-                    return false;
+                    return -1;
                 case SocketError.HostUnreachable:
                     if (TryGetPeer(remoteEndPoint, out fromPeer))
                         DisconnectPeerForce(fromPeer, DisconnectReason.HostUnreachable, errorCode, null);
                     CreateEvent(NetEvent.EType.Error, remoteEndPoint: remoteEndPoint, errorCode: errorCode);
-                    return false;
+                    return -1;
                 case SocketError.ConnectionReset: //connection reset (connection closed)
                     if (TryGetPeer(remoteEndPoint, out fromPeer))
                         DisconnectPeerForce(fromPeer, DisconnectReason.RemoteConnectionClose, errorCode, null);
-                    return false;
+                    return -1;
             }
+            if (result <= 0)
+                return 0;
 #if STATS_ENABLED
             Statistics.PacketsSent++;
             Statistics.BytesSent += (uint)length;
 #endif
-
-            return true;
+            return result;
         }
 
         internal void DisconnectPeerForce(NetPeer peer,
@@ -976,7 +970,7 @@ namespace LiteNetLib
             _logicThread.Start();
             return true;
         }
-      
+
         /// <summary>
         /// Start logic thread and listening on selected port
         /// </summary>
@@ -995,8 +989,8 @@ namespace LiteNetLib
         /// </summary>
         /// <param name="port">port to listen</param>
         public bool Start(int port)
-        { 
-            return Start(IPAddress.Any,IPAddress.IPv6Any, port);
+        {
+            return Start(IPAddress.Any, IPAddress.IPv6Any, port);
         }
 
         /// <summary>
@@ -1034,7 +1028,7 @@ namespace LiteNetLib
             if (!IsRunning)
                 return false;
             var packet = NetPacketPool.GetWithData(PacketProperty.UnconnectedMessage, message, start, length);
-            bool result = SendRawAndRecycle(packet, remoteEndPoint);
+            bool result = SendRawAndRecycle(packet, remoteEndPoint) > 0;
             return result;
         }
 
@@ -1073,7 +1067,7 @@ namespace LiteNetLib
             if (!IsRunning)
                 return false;
             var packet = NetPacketPool.GetWithData(PacketProperty.DiscoveryResponse, data, start, length);
-            bool result = SendRawAndRecycle(packet, remoteEndPoint);
+            bool result = SendRawAndRecycle(packet, remoteEndPoint) > 0;
             return result;
         }
 
@@ -1087,7 +1081,7 @@ namespace LiteNetLib
         }
 
         /// <summary>
-        /// Получите все ожидающие события. Звоните в коде обновления игры
+        /// Receive all pending events. Call this in game update code
         /// </summary>
         public void PollEvents()
         {

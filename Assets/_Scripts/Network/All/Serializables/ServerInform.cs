@@ -24,6 +24,7 @@ namespace Community.Core
 
         }
     }
+    [System.Serializable]
     public struct PlayerData : INetSerializable
     {
         public string username;
@@ -34,7 +35,7 @@ namespace Community.Core
         {
             writer.Put(Id);
             writer.Put(steamid);
-            writer.Put(username);
+            writer.Put(username.ToString());
         }
 
         public void Deserialize(NetDataReader reader)

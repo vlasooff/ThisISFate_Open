@@ -10,8 +10,7 @@ using Unity.Jobs;
 using UnityEngine;
 
 namespace Community.Client.Systems
-{
-    [DisableAutoCreation]
+{ 
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class InventoryCSystem : ComponentClient
     {
@@ -116,6 +115,7 @@ namespace Community.Client.Systems
 
         private void OnWorldItems(WorldItemsPacket obj)
         {
+            Inventory.itemWorlds = new ItemComponent[obj.items.Length];
             for (int i = 0; i < obj.items.Length; i++)
             {
                 ItemAsset asset = GetItemAsset(obj.items[i].Id);

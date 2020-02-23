@@ -34,7 +34,7 @@ namespace LiteNetLib
     }
 
     /// <summary>
-    /// Модуль для операций пробивки UDP NAT Hole. Можно получить доступ из NetManager
+    /// Module for UDP NAT Hole punching operations. Can be accessed from NetManager
     /// </summary>
     public sealed class NatPunchModule
     {
@@ -52,9 +52,6 @@ namespace LiteNetLib
         }
 
         private readonly NetSocket _socket;
-
-     
-
         private readonly Queue<RequestEventData> _requestEvents;
         private readonly Queue<SuccessEventData> _successEvents; 
         private const byte HostByte = 1;
