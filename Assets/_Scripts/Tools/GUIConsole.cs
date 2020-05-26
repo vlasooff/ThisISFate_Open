@@ -1,8 +1,6 @@
 
 
-using Community.Client;
-using Community.Server;
-using Community.Server.Components;
+using Community.Client; 
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -204,7 +202,7 @@ namespace Network.Tools
 
         public void ActiveCommand(string cmd)
         {
-            ChatSystem.CommandConsole(command);
+            //ChatSystem.CommandConsole(command);
 
         }
         /// <summary>

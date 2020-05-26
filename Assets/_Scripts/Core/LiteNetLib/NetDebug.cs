@@ -10,7 +10,12 @@ namespace LiteNetLib
         Trace,
         Info
     }
-
+    public enum NetWorld
+    {
+        SERVER,
+        CLIENT,
+        ClientAndServer 
+    }
     /// <summary>
     /// Interface to implement for your own logger
     /// </summary>
@@ -20,8 +25,9 @@ namespace LiteNetLib
     }
 
     /// <summary>
-    /// Static class for defining your own LiteNetLib logger instead of Console.WriteLine
-    /// or Debug.Log if compiled with UNITY flag
+    /// /// Статический класс для определения вашего собственного регистратора LiteNetLib вместо Console.WriteLine
+        
+        /// или Debug.Log, если скомпилирован с флагом UNITY
     /// </summary>
     public static class NetDebug
     {
@@ -45,7 +51,24 @@ namespace LiteNetLib
                 }
             }
         }
-
+        private static void WriteLogic(NetWorld world,NetLogLevel logLevel, string str, params object[] args)
+        {
+            lock (DebugLogLock)
+            {
+                if (Logger == null)
+                {
+#if UNITY_4 || UNITY_5 || UNITY_5_3_OR_NEWER
+                    UnityEngine.Debug.Log($"<color=cyan>[{world.ToString()}]</color> " + string.Format(str, args));
+#else
+                    Console.WriteLine(str, args);
+#endif
+                }
+                else
+                {
+                    Logger.WriteNet(logLevel, str, args);
+                }
+            }
+        }
         [Conditional("DEBUG_MESSAGES")]
         internal static void Write(string str, params object[] args)
         {
@@ -63,7 +86,11 @@ namespace LiteNetLib
         {
             WriteLogic(NetLogLevel.Trace, str, args);
         }
-
+        [Conditional("DEBUG_MESSAGES"), Conditional("DEBUG")]
+        public static void Log(NetWorld netWorld, string str, params object[] args)
+        {
+            WriteLogic(netWorld,NetLogLevel.Trace, str, args);
+        }
         [Conditional("DEBUG_MESSAGES"), Conditional("DEBUG")]
         internal static void WriteForce(NetLogLevel level, string str, params object[] args)
         {

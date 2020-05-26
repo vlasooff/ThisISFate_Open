@@ -65,8 +65,8 @@ public class ItemTools : EditorWindow {
             }
         }
         }
-        ItemAsset asset = Resources.Load<ItemAsset>($"Prefabs/items/item_{id}");
-        if (meshfilter != null) meshfilter.mesh = asset.mesh;
+        //ItemAsset asset = Resources.Load<ItemAsset>($"Prefabs/items/item_{id}");
+        //if (meshfilter != null) meshfilter.mesh = asset.mesh;
         if (!icon) return;
         Texture2D texture = null;
         if (GUILayout.Button("Capute Icon"))

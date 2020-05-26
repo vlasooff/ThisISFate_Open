@@ -45,6 +45,7 @@ namespace LiteNetLib.Utils
         protected virtual SubscribeDelegate GetCallbackFromData(NetDataReader reader)
         {
             var hash = reader.GetULong();
+         //   var hash = reader.GetByte();
             SubscribeDelegate action;
             if (!_callbacks.TryGetValue(hash, out action))
             {
@@ -52,7 +53,7 @@ namespace LiteNetLib.Utils
             }
             return action;
         }
-
+        
         protected virtual void WriteHash(Type type, NetDataWriter writer)
         {
             writer.Put(GetHash(type));

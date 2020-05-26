@@ -23,6 +23,8 @@ namespace LiteNetLib.Utils
 
         public NetDataWriter(bool autoResize) : this(autoResize, InitialSize)
         {
+        
+            ushort b = 1; 
         }
 
         public NetDataWriter(bool autoResize, int initialSize)
@@ -127,9 +129,11 @@ namespace LiteNetLib.Utils
         }
         public void Put(Vector3 vector)
         {
-            Put(vector.x);
-            Put(vector.y);
-            Put(vector.z);
+            Put((int)vector.x);
+            Put((int)vector.y);
+            Put((int)vector.z);
+            Debug.Log("Byte:" + _data.ToString());
+            Debug.Log("Size:" + _data.Length);
         }
         public void Put(Vector2 vector)
         {

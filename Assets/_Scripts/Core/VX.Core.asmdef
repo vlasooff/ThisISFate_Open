@@ -1,3 +1,15 @@
-﻿{
-	"name": "VX.Core"
+{
+    "name": "VX.Core",
+    "references": [
+        "GUID:95129fa2931be83479e523431111cf40"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

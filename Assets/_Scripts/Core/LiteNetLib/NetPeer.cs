@@ -43,7 +43,7 @@ namespace LiteNetLib
     /// </summary>
     public sealed class NetPeer
     {
-        //Ping and RTT
+        //Ping and RTT  
         private int _rtt;
         private int _avgRtt;
         private int _rttCount;
@@ -53,7 +53,7 @@ namespace LiteNetLib
         private readonly Stopwatch _pingTimer = new Stopwatch();
         private int _timeSinceLastPacket;
         private long _remoteDelta;
-
+    
         //Common            
         private readonly IPEndPoint _remoteEndPoint;
         private readonly NetManager _netManager;

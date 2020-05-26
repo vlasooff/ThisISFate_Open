@@ -16,32 +16,24 @@ namespace Network.Tools
         public bool isDevelope;
       
         GUIStyle style = new GUIStyle(); 
-        float deltaTime = 0.0f;
-        ClientData clientData;
-        PlayersManager playersData;
+        float deltaTime = 0.0f; 
         void Start()
         {
-            if (ClientManager.manager != null)
-            {
+             
 
-                clientData = ClientManager.manager.clientData;
-                if(ClientManager.manager.playersManager)
-                    playersData = ClientManager.manager.playersManager;
-            }
+        //    style.normal.textColor = Color.white;
+        //    style.fontSize = 23;
+        //    style.fontStyle = FontStyle.Bold;
+        //}
 
-            style.normal.textColor = Color.white;
-            style.fontSize = 23;
-            style.fontStyle = FontStyle.Bold;
-        }
-
-        void OnGUI()
-        {
-            if (!isDevelope) return;
-            float msec = deltaTime * 1000.0f;
-            float fps = 1.0f / deltaTime;
-            if (ClientManager.manager != null)
-            GUI.Label(new Rect(10, 10, 100, 34), $" FPS: {fps} \n PING: { clientData._netManager.FirstPeer.Ping} \n PCounts: { clientData._netManager.FirstPeer.PacketsCountInReliableQueue} \n Time: { (Time.deltaTime - clientData._netManager.FirstPeer.RemoteTimeDelta)} ", style);
-        if(playersData != null) GUI.Label(new Rect(10, 160, 100, 34), $" Players: {playersData.players.Count}   ", style);
+        //void OnGUI()
+        //{
+        //    if (!isDevelope) return;
+        //    float msec = deltaTime * 1000.0f;
+        //    float fps = 1.0f / deltaTime;
+        //    if (ClientManager.manager != null)
+        //    GUI.Label(new Rect(10, 10, 100, 34), $" FPS: {fps} \n PING: { clientData._netManager.FirstPeer.Ping} \n PCounts: { clientData._netManager.FirstPeer.PacketsCountInReliableQueue} \n Time: { (Time.deltaTime - clientData._netManager.FirstPeer.RemoteTimeDelta)} ", style);
+        //if(playersData != null) GUI.Label(new Rect(10, 160, 100, 34), $" Players: {playersData.players.Count}   ", style);
         }
          
   
